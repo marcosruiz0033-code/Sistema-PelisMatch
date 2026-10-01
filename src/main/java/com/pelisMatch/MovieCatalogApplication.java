@@ -1,4 +1,4 @@
-package com.pelisMatch.movie_catalog;
+package com.pelisMatch;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
