@@ -1,0 +1,260 @@
+/* =========================
+   COLORES PRINCIPALES
+========================= */
+
+:root {
+    --rojo: #e63946;
+    --rojo-hover: #c92f3b;
+    --fondo: #f5f6f8;
+    --blanco: #ffffff;
+    --texto: #212529;
+    --gris: #6c757d;
+    --borde: #e9ecef;
+}
+
+/* =========================
+   GENERAL
+========================= */
+
+body {
+    background-color: var(--fondo);
+    color: var(--texto);
+    margin: 0;
+}
+
+
+/* =========================
+   BARRA SUPERIOR
+========================= */
+
+.navbar {
+    height: 70px;
+    background-color: var(--blanco) !important;
+    border-bottom: 1px solid var(--borde) !important;
+    position: relative;
+}
+
+/* Texto "Bienvenido" */
+.navbar .text-secondary {
+    color: var(--gris) !important;
+}
+
+/* Logo PeliMatch */
+.navbar .fs-4 {
+    color: var(--rojo);
+    font-size: 1.4rem !important;
+}
+
+/* Icono del logo */
+.navbar .bi-film {
+    color: var(--rojo);
+}
+
+/* Usuario */
+.navbar .fw-semibold {
+    color: var(--texto);
+}
+
+
+/* =========================
+   CUERPO
+========================= */
+
+.container-fluid {
+    padding: 0;
+}
+
+.row.min-vh-100 {
+    margin: 0;
+}
+
+
+/* =========================
+   MENU LATERAL
+========================= */
+
+/*
+   Tu HTML no tiene .sidebar,
+   por eso usamos el aside directamente.
+*/
+
+aside {
+    background-color: var(--blanco) !important;
+    border-right: 1px solid var(--borde) !important;
+    padding: 25px 15px !important;
+    min-height: calc(100vh - 70px);
+}
+
+
+/* =========================
+   ENLACES DEL MENU
+========================= */
+
+aside .nav-link {
+    color: var(--gris) !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    border-radius: 10px !important;
+    transition: all 0.25s ease;
+}
+
+
+/* Iconos */
+
+aside .nav-link i {
+    font-size: 1.1rem;
+    width: 25px;
+}
+
+
+/* =========================
+   EFECTO HOVER
+========================= */
+
+aside .nav-link:hover {
+    background-color: #fff0f1 !important;
+    color: var(--rojo) !important;
+    transform: translateX(4px);
+}
+
+
+/* Icono también cambia al pasar mouse */
+
+aside .nav-link:hover i {
+    color: var(--rojo);
+}
+
+
+/* =========================
+   ENLACE ACTIVO
+========================= */
+
+aside .nav-link.active {
+    background-color: var(--rojo) !important;
+    color: white !important;
+}
+
+
+/* =========================
+   CERRAR SESIÓN
+========================= */
+
+aside .text-danger {
+    color: var(--rojo) !important;
+}
+
+aside .text-danger:hover {
+    background-color: #fff0f1 !important;
+    color: var(--rojo-hover) !important;
+}
+
+
+/* =========================
+   CONTENIDO PRINCIPAL
+========================= */
+
+.contenido {
+    padding: 30px;
+}
+
+
+/* =========================
+   TITULOS
+========================= */
+
+.titulo-pagina {
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.subtitulo {
+    color: var(--gris);
+}
+
+
+/* =========================
+   TARJETAS
+========================= */
+
+.card-dashboard {
+    background-color: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    padding: 20px;
+    transition: all 0.25s ease;
+}
+
+.card-dashboard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================
+   ICONOS DEL DASHBOARD
+========================= */
+
+.icon-dashboard {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background-color: #fff0f1;
+    color: var(--rojo);
+    font-size: 1.3rem;
+}
+
+
+/* =========================
+   BOTONES
+========================= */
+
+.btn-pelimatch {
+    background-color: var(--rojo);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    transition: all 0.25s ease;
+}
+
+.btn-pelimatch:hover {
+    background-color: var(--rojo-hover);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(230, 57, 70, 0.25);
+}
+
+.btn-pelimatch:active {
+    transform: translateY(0);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+    aside {
+        min-height: auto;
+    }
+
+    .contenido {
+        padding: 20px;
+    }
+
+    .navbar {
+        padding: 0 15px !important;
+    }
+
+    .navbar .position-absolute {
+        position: static !important;
+        transform: none !important;
+        margin: auto;
+    }
+}
