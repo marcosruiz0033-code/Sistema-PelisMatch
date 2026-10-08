@@ -13,4 +13,17 @@ public class ControllerAdmin {
     public String Dashboard (){
         return "Admin-vista/Dashboard";
     }
+    @GetMapping("/productos")
+    public String productos (){
+        return "Admin-vista/ProductosVista";
+    }
+    @GetMapping("/pedidos")
+    public String pedidos (){
+        return "Admin-vista/PedidosVista";
+    }
+    @GetMapping("/usuarios")
+    public String usuarios (){
+        return "Admin-vista/UsuariosVista";
+    }
+
 }

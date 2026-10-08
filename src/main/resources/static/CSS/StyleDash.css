@@ -1,23 +1,24 @@
 /* =========================
-   COLORES PRINCIPALES
-========================= */
-
+      COLORES PRINCIPALES
+    ========================= */
 :root {
-    --rojo: #e63946;
-    --rojo-hover: #c92f3b;
-    --fondo: #f5f6f8;
+    --naranja: #f97316;
+    --naranja-hover: #ea580c;
+    --fondo: #f8fafc;
     --blanco: #ffffff;
-    --texto: #212529;
-    --gris: #6c757d;
-    --borde: #e9ecef;
+    --texto: #111827;
+    --gris: #cbd5e1;
+    --gris-texto: #6b7280;
+    --borde: #e5e7eb;
 }
+
 
 /* =========================
    GENERAL
 ========================= */
 
 body {
-    background-color: var(--fondo);
+    background: var(--fondo);
     color: var(--texto);
     margin: 0;
 }
@@ -35,22 +36,26 @@ body {
 }
 
 /* Texto "Bienvenido" */
+
 .navbar .text-secondary {
-    color: var(--gris) !important;
+    color: var(--gris-texto) !important;
 }
 
 /* Logo PeliMatch */
+
 .navbar .fs-4 {
-    color: var(--rojo);
+    color: var(--naranja);
     font-size: 1.4rem !important;
 }
 
 /* Icono del logo */
+
 .navbar .bi-film {
-    color: var(--rojo);
+    color: var(--naranja);
 }
 
 /* Usuario */
+
 .navbar .fw-semibold {
     color: var(--texto);
 }
@@ -74,15 +79,25 @@ body {
 ========================= */
 
 /*
-   Tu HTML no tiene .sidebar,
-   por eso usamos el aside directamente.
+   Adaptado al nuevo diseño:
+   antes: aside
+   ahora: .sidebar
 */
 
 aside {
-    background-color: var(--blanco) !important;
-    border-right: 1px solid var(--borde) !important;
-    padding: 25px 15px !important;
+    width: 260px;
     min-height: calc(100vh - 70px);
+    background: #111827 !important;
+    border-right: none !important;
+    padding: 25px 15px !important;
+}
+
+/* Si tu HTML usa .sidebar también funcionará */
+
+.sidebar {
+    width: 260px;
+    min-height: calc(100vh - 70px);
+    background: #111827 !important;
 }
 
 
@@ -90,20 +105,23 @@ aside {
    ENLACES DEL MENU
 ========================= */
 
-aside .nav-link {
-    color: var(--gris) !important;
+aside .nav-link,
+.sidebar .nav-link {
+    color: #cbd5e1 !important;
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 15px;
+    padding: 12px 20px;
     border-radius: 10px !important;
+    margin-bottom: 5px;
     transition: all 0.25s ease;
 }
 
 
 /* Iconos */
 
-aside .nav-link i {
+aside .nav-link i,
+.sidebar .nav-link i {
     font-size: 1.1rem;
     width: 25px;
 }
@@ -113,17 +131,19 @@ aside .nav-link i {
    EFECTO HOVER
 ========================= */
 
-aside .nav-link:hover {
-    background-color: #fff0f1 !important;
-    color: var(--rojo) !important;
-    transform: translateX(4px);
+aside .nav-link:hover,
+.sidebar .nav-link:hover {
+    background: #f97316 !important;
+    color: white !important;
+    transform: none;
 }
 
 
-/* Icono también cambia al pasar mouse */
+/* Icono en hover */
 
-aside .nav-link:hover i {
-    color: var(--rojo);
+aside .nav-link:hover i,
+.sidebar .nav-link:hover i {
+    color: white;
 }
 
 
@@ -131,8 +151,9 @@ aside .nav-link:hover i {
    ENLACE ACTIVO
 ========================= */
 
-aside .nav-link.active {
-    background-color: var(--rojo) !important;
+aside .nav-link.active,
+.sidebar .nav-link.active {
+    background: #f97316 !important;
     color: white !important;
 }
 
@@ -141,13 +162,15 @@ aside .nav-link.active {
    CERRAR SESIÓN
 ========================= */
 
-aside .text-danger {
-    color: var(--rojo) !important;
+aside .text-danger,
+.sidebar .text-danger {
+    color: #f97316 !important;
 }
 
-aside .text-danger:hover {
-    background-color: #fff0f1 !important;
-    color: var(--rojo-hover) !important;
+aside .text-danger:hover,
+.sidebar .text-danger:hover {
+    background: #f97316 !important;
+    color: white !important;
 }
 
 
@@ -155,7 +178,19 @@ aside .text-danger:hover {
    CONTENIDO PRINCIPAL
 ========================= */
 
-.contenido {
+/*
+   Antes:
+   .contenido
+
+   Nuevo diseño:
+   .content
+*/
+
+.contenido,
+.content {
+    flex: 1;
+    background: #f8f9fa;
+    min-height: calc(100vh - 70px);
     padding: 30px;
 }
 
@@ -170,25 +205,47 @@ aside .text-danger:hover {
 }
 
 .subtitulo {
-    color: var(--gris);
+    color: var(--gris-texto);
 }
 
 
 /* =========================
-   TARJETAS
+   TARJETAS DEL DASHBOARD
 ========================= */
 
 .card-dashboard {
     background-color: var(--blanco);
-    border: 1px solid var(--borde);
-    border-radius: 14px;
+    border: none;
+    border-radius: 15px;
     padding: 20px;
-    transition: all 0.25s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
 }
 
 .card-dashboard:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.10);
+}
+
+
+/* =========================
+   TARJETAS BOOTSTRAP
+========================= */
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    transition: 0.3s;
+}
+
+.card-header {
+    border-bottom: none;
+    font-weight: 600;
 }
 
 
@@ -196,16 +253,23 @@ aside .text-danger:hover {
    ICONOS DEL DASHBOARD
 ========================= */
 
-.icon-dashboard {
-    width: 45px;
-    height: 45px;
+/*
+   Compatible con:
+   .icon-dashboard
+   .icon-box
+*/
+
+.icon-dashboard,
+.icon-box {
+    width: 55px;
+    height: 55px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    background-color: #fff0f1;
-    color: var(--rojo);
-    font-size: 1.3rem;
+    border-radius: 12px;
+    font-size: 1.4rem;
+    background: #f97316;
+    color: white;
 }
 
 
@@ -214,7 +278,7 @@ aside .text-danger:hover {
 ========================= */
 
 .btn-pelimatch {
-    background-color: var(--rojo);
+    background-color: #f97316;
     color: white;
     border: none;
     border-radius: 8px;
@@ -223,10 +287,10 @@ aside .text-danger:hover {
 }
 
 .btn-pelimatch:hover {
-    background-color: var(--rojo-hover);
+    background-color: #ea580c;
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(230, 57, 70, 0.25);
+    box-shadow: 0 5px 15px rgba(249, 115, 22, 0.25);
 }
 
 .btn-pelimatch:active {
@@ -240,11 +304,14 @@ aside .text-danger:hover {
 
 @media (max-width: 768px) {
 
-    aside {
+    aside,
+    .sidebar {
+        width: 100%;
         min-height: auto;
     }
 
-    .contenido {
+    .contenido,
+    .content {
         padding: 20px;
     }
 
