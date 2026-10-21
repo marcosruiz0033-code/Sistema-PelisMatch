@@ -5,9 +5,80 @@
     <title>Inicio — PeliMatch</title>
 </head>
 <body>
-<main th:fragment="contenidoUsuario" class="container py-5">
-    <h1 class="mb-4">Bienvenido a PeliMatch</h1>
-    <p class="text-secondary">Aquí verás el contenido destacado del sitio (pendiente).</p>
+<main th:fragment="contenidoUsuario">
+
+    <!-- ===== Hero destacado ===== -->
+    <section class="hero">
+        <div class="hero-contenido">
+            <span class="hero-badge">Destacado</span>
+            <h1 class="hero-titulo">El último vagón</h1>
+            <p class="hero-meta">
+                <span>2025</span> · <span>Suspense</span> · <span>2 h 10 min</span>
+            </p>
+            <p class="hero-descripcion">
+                Un periodista investiga la desaparición de un tren nocturno y descubre
+                una red de secretos que nadie quería revelar. (Contenido de ejemplo)
+            </p>
+            <div class="hero-botones">
+                <a th:href="@{/peliculas}" class="btn-custom btn-custom-primary">
+                    <i class="bi bi-play-fill"></i> Ver detalles
+                </a>
+                <a th:href="@{/}" class="btn-custom btn-custom-secondary">
+                    <i class="bi bi-plus-lg"></i> Mi lista
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Destacados ===== -->
+    <section class="seccion">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="seccion-titulo">Destacados</h2>
+            <a th:href="@{/peliculas}" class="ver-mas">Ver todo <i class="bi bi-chevron-right"></i></a>
+        </div>
+        <div class="grid-tarjetas">
+            <div class="tarjeta" th:each="n : ${#numbers.sequence(1, 6)}">
+                <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                <div class="card-body">
+                    <p class="titulo">Título de ejemplo</p>
+                    <p class="meta">2025 · Película</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Series recientes ===== -->
+    <section class="seccion">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="seccion-titulo">Series recientes</h2>
+            <a th:href="@{/series}" class="ver-mas">Ver todo <i class="bi bi-chevron-right"></i></a>
+        </div>
+        <div class="grid-tarjetas">
+            <div class="tarjeta" th:each="n : ${#numbers.sequence(1, 6)}">
+                <div class="poster-placeholder"><i class="bi bi-tv"></i></div>
+                <div class="card-body">
+                    <p class="titulo">Serie de ejemplo</p>
+                    <p class="meta">2025 · Serie</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Categorías ===== -->
+    <section class="seccion">
+        <h2 class="seccion-titulo">Categorías</h2>
+        <div class="chips-categorias">
+            <a th:href="@{/categorias/Accion}" class="categoria-chip">Acción</a>
+            <a th:href="@{/categorias/Comedia}" class="categoria-chip">Comedia</a>
+            <a th:href="@{/categorias/Drama}" class="categoria-chip">Drama</a>
+            <a th:href="@{/categorias/Terror}" class="categoria-chip">Terror</a>
+            <a th:href="@{/categorias/Ciencia-ficcion}" class="categoria-chip">Ciencia ficción</a>
+            <a th:href="@{/categorias/Animacion}" class="categoria-chip">Animación</a>
+            <a th:href="@{/categorias/Suspenso}" class="categoria-chip">Suspenso</a>
+            <a th:href="@{/categorias/Aventura}" class="categoria-chip">Aventura</a>
+        </div>
+    </section>
+
 </main>
 </body>
 </html>
