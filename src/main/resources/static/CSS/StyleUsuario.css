@@ -6,8 +6,6 @@
     --bg-surface: #14151a;
     --bg-surface-elevated: #1c1e24;
     --bg-overlay: rgba(13, 14, 18, 0.75);
-    --gradient-hero: linear-gradient(180deg, rgba(13, 14, 18, 0.2) 0%, #0d0e12 100%);
-    --gradient-side: linear-gradient(90deg, #0d0e12 0%, rgba(13, 14, 18, 0.8) 40%, transparent 100%);
 
     /* Texto */
     --text-primary: #ffffff;
@@ -26,7 +24,7 @@
 
     /* Tipografía */
     --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-hero-title: 2.25rem;
+    --font-titulo-grande: 2.25rem;
     --font-section-title: 0.95rem;
     --font-body: 0.875rem;
     --font-caption: 0.75rem;
@@ -155,30 +153,66 @@ a {
     padding: var(--section-gap) var(--gutter);
 }
 
-/* ===== Hero ===== */
+/* ===== Banner destacado (carrusel) ===== */
 
-.hero {
+.banner {
     position: relative;
-    height: 75vh;
-    min-height: 420px;
     margin: calc(var(--section-gap) * -1) calc(var(--gutter) * -1) var(--section-gap);
-    padding: 0 var(--gutter);
+}
+
+.banner-slide {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    min-height: 420px;
+    height: min(72vh, 560px);
+    overflow: hidden;
+    color: inherit;
+    background: var(--bg-surface);
+}
+
+.banner-poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.banner-poster-placeholder {
     display: flex;
     align-items: center;
-    background:
-        var(--gradient-side),
-        var(--gradient-hero),
-        radial-gradient(circle at 75% 30%, #2a3560 0%, var(--bg-surface) 45%, var(--bg-primary) 100%);
-    overflow: hidden;
+    justify-content: center;
+    background: radial-gradient(circle at 65% 35%, #2a3560 0%, var(--bg-surface) 55%, var(--bg-primary) 100%);
+    font-size: 5rem;
+    color: var(--text-muted);
 }
 
-.hero-contenido {
-    width: 45%;
-    min-width: 300px;
+.banner-velo {
+    position: absolute;
+    inset: 0;
     z-index: 1;
+    background:
+        linear-gradient(90deg, rgba(13, 14, 18, 0.95) 0%, rgba(13, 14, 18, 0.72) 40%, rgba(13, 14, 18, 0.15) 75%, transparent 100%),
+        linear-gradient(180deg, rgba(13, 14, 18, 0.35) 0%, transparent 35%, rgba(13, 14, 18, 0.85) 100%);
 }
 
-.hero-badge {
+.banner-contenido {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 var(--gutter) 2.6rem;
+}
+
+.banner-info {
+    max-width: 640px;
+}
+
+.banner-badge {
     display: inline-block;
     background: var(--highlight);
     color: #000000;
@@ -191,30 +225,116 @@ a {
     margin-bottom: 1rem;
 }
 
-.hero-titulo {
-    font-size: var(--font-hero-title);
+.banner-titulo {
+    font-size: var(--font-titulo-grande);
     font-weight: 900;
     letter-spacing: -0.02em;
     margin: 0 0 .6rem;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, .65);
 }
 
-.hero-meta {
+.banner-meta {
     color: var(--text-secondary);
     font-size: var(--font-body);
     margin-bottom: .9rem;
 }
 
-.hero-descripcion {
+.banner-sinopsis {
     color: var(--text-secondary);
     font-size: var(--font-body);
     line-height: 1.6;
-    margin-bottom: 1.4rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 1.2rem;
 }
 
-.hero-botones {
-    display: flex;
-    gap: .8rem;
-    flex-wrap: wrap;
+.banner-ver-todo {
+    position: absolute;
+    top: 1.2rem;
+    right: var(--gutter);
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: var(--font-caption);
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: rgba(13, 14, 18, 0.55);
+    border: 1px solid var(--border-subtle);
+    padding: .45rem .9rem;
+    border-radius: 9999px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: color .2s ease, background .2s ease;
+}
+
+.banner-ver-todo:hover {
+    color: var(--text-primary);
+    background: rgba(13, 14, 18, 0.85);
+}
+
+/* ===== Controles del carrusel ===== */
+
+.banner .carousel-control-prev,
+.banner .carousel-control-next {
+    width: 9%;
+    z-index: 3;
+    opacity: .55;
+}
+
+.banner .carousel-control-prev:hover,
+.banner .carousel-control-next:hover {
+    opacity: 1;
+}
+
+.banner .carousel-control-prev-icon,
+.banner .carousel-control-next-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-size: 1.1rem 1.1rem;
+    background-color: rgba(13, 14, 18, 0.55);
+    border: 1px solid var(--border-subtle);
+    border-radius: 50%;
+}
+
+.banner .carousel-indicators {
+    margin-right: 0;
+    margin-left: 0;
+    padding: 0 var(--gutter) 1.5rem;
+    z-index: 3;
+}
+
+.banner .carousel-indicators [data-bs-target] {
+    width: 26px;
+    height: 4px;
+    margin-left: 0;
+    margin-right: 8px;
+    border-top: 0;
+    border-bottom: 0;
+    background-color: rgba(255, 255, 255, .35);
+    opacity: 1;
+    transition: background-color .3s ease;
+}
+
+.banner .carousel-indicators [data-bs-target].active {
+    background-color: var(--highlight);
+}
+
+@media (max-width: 992px) {
+    .banner-contenido {
+        padding-bottom: 2rem;
+    }
+
+    .banner-info {
+        max-width: 100%;
+    }
+
+    .banner .carousel-control-prev,
+    .banner .carousel-control-next {
+        width: 14%;
+    }
 }
 
 /* ===== Secciones ===== */
@@ -395,7 +515,7 @@ a.tarjeta {
 }
 
 .detalle-titulo {
-    font-size: var(--font-hero-title);
+    font-size: var(--font-titulo-grande);
     font-weight: 900;
     letter-spacing: -0.02em;
     margin: 0 0 .7rem;
