@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{Fragments/UsuarioLayout :: base(~{::contenidoUsuario})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio — PeliMatch</title>
+</head>
+<body>
+<div th:fragment="contenidoUsuario">
+
+    <h1 class="visually-hidden">PeliMatch — Inicio</h1>
+
+    <!-- ===== Banner destacado (carrusel) ===== -->
+    <section class="banner" th:if="${!seriesDestacadas.isEmpty()}">
+        <div id="carouselDestacados" class="carousel slide" data-bs-ride="carousel"
+             data-bs-interval="6000" data-bs-pause="hover" data-bs-wrap="true">
+            <div class="carousel-inner">
+                <div class="carousel-item" th:each="s, iterStat : ${seriesDestacadas}"
+                     th:classappend="${iterStat.index == 0} ? 'active' : ''">
+                    <a class="banner-slide" th:href="@{/series/{id}(id=${s.idSerie})}">
+                        <img class="banner-poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
+                             th:src="${s.imagen}" th:alt="${s.titulo}">
+                        <div class="banner-poster banner-poster-placeholder"
+                             th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
+                            <i class="bi bi-tv"></i>
+                        </div>
+                        <div class="banner-velo"></div>
+                        <div class="banner-contenido">
+                            <div class="banner-info">
+                                <span class="banner-badge">Destacado</span>
+                                <h2 class="banner-titulo" th:text="${s.titulo}">Título</h2>
+                                <p class="banner-meta">
+                                    <span th:text="${s.anio}">2025</span> ·
+                                    <span th:text="${s.categoria.nombre}">Categoría</span> ·
+                                    <span th:if="${s.temporadas != null}">
+                                        <span th:text="${s.temporadas}">1</span> temporadas
+                                    </span>
+                                </p>
+                                <p class="banner-sinopsis" th:text="${s.sinopsis}">Sinopsis</p>
+                                <span class="btn-custom btn-custom-primary banner-boton">
+                                    <i class="bi bi-info-circle"></i> Ver detalles
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="carousel-indicators">
+                <button th:each="s, iterStat : ${seriesDestacadas}" type="button"
+                        data-bs-target="#carouselDestacados" th:data-bs-slide-to="${iterStat.index}"
+                        th:classappend="${iterStat.index == 0} ? 'active' : ''"
+                        th:aria-label="'Ver destacado ' + ${iterStat.index + 1}"></button>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselDestacados" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselDestacados" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+
+        <a class="banner-ver-todo" th:href="@{/series}">
+            Ver todo <i class="bi bi-chevron-right"></i>
+        </a>
+    </section>
+
+    <!-- ===== Estado vacío ===== -->
+    <section class="seccion" th:if="${seriesDestacadas.isEmpty()}">
+        <div class="grid-tarjetas">
+            <div class="tarjeta">
+                <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                <div class="card-body">
+                    <p class="titulo">Sin destacados</p>
+                    <p class="meta">Agrega series desde el panel admin</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Más series ===== -->
+    <section class="seccion" th:if="${!seriesAdicionales.isEmpty()}">
+        <div th:replace="~{Fragments/Secciones :: cabecera('Más series', '/series')}"></div>
+        <div class="grid-tarjetas">
+            <a class="tarjeta" th:each="s : ${seriesAdicionales}" th:href="@{/series/{id}(id=${s.idSerie})}">
+                <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
+                     th:src="${s.imagen}" th:alt="${s.titulo}">
+                <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
+                    <i class="bi bi-tv"></i>
+                </div>
+                <div class="card-body">
+                    <p class="titulo" th:text="${s.titulo}">Título</p>
+                    <p class="meta">
+                        <span th:text="${s.anio}">2025</span> ·
+                        <span th:text="${s.categoria.nombre}">Categoría</span>
+                    </p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ===== Lo más reciente ===== -->
+    <section class="seccion">
+        <div th:replace="~{Fragments/Secciones :: cabecera('Lo más reciente', '/peliculas')}"></div>
+        <div class="grid-tarjetas">
+            <div class="tarjeta">
+                <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                <div class="card-body">
+                    <p class="titulo">Próximamente</p>
+                    <p class="meta">Módulo de películas en desarrollo</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Películas actualizadas ===== -->
+    <section class="seccion">
+        <div th:replace="~{Fragments/Secciones :: cabecera('Películas actualizadas', '/peliculas')}"></div>
+        <div class="grid-tarjetas">
+            <div class="tarjeta">
+                <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                <div class="card-body">
+                    <p class="titulo">Próximamente</p>
+                    <p class="meta">Módulo de películas en desarrollo</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Estrenos top ===== -->
+    <section class="seccion">
+        <div th:replace="~{Fragments/Secciones :: cabecera('Estrenos top', '/peliculas')}"></div>
+        <div class="grid-tarjetas">
+            <div class="tarjeta">
+                <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                <div class="card-body">
+                    <p class="titulo">Próximamente</p>
+                    <p class="meta">Módulo de películas en desarrollo</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Categorías ===== -->
+    <section class="seccion">
+        <h2 class="seccion-titulo">Categorías</h2>
+        <div class="chips-categorias">
+            <a th:href="@{/categorias/Accion}" class="categoria-chip">Acción</a>
+            <a th:href="@{/categorias/Comedia}" class="categoria-chip">Comedia</a>
+            <a th:href="@{/categorias/Drama}" class="categoria-chip">Drama</a>
+            <a th:href="@{/categorias/Terror}" class="categoria-chip">Terror</a>
+            <a th:href="@{/categorias/Ciencia-ficcion}" class="categoria-chip">Ciencia ficción</a>
+            <a th:href="@{/categorias/Animacion}" class="categoria-chip">Animación</a>
+            <a th:href="@{/categorias/Suspenso}" class="categoria-chip">Suspenso</a>
+            <a th:href="@{/categorias/Aventura}" class="categoria-chip">Aventura</a>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

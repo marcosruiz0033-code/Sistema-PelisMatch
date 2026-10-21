@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="base(contenidoUsuario)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/CSS/StyleUsuario.css}">
+    <title>PeliMatch</title>
+</head>
+<body>
+
+<!-- Encabezado -->
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" th:href="@{/}">
+            <i class="bi bi-film"></i> PeliMatch
+        </a>
+
+        <nav class="main-nav">
+            <a class="nav-item-custom active" th:href="@{/}">Inicio</a>
+            <a class="nav-item-custom" th:href="@{/peliculas}">Películas</a>
+            <a class="nav-item-custom" th:href="@{/series}">Series</a>
+        </nav>
+
+        <div class="header-right">
+            <button class="icon-btn" type="button" aria-label="Buscar">
+                <i class="bi bi-search"></i>
+            </button>
+            <button class="icon-btn" type="button" aria-label="Cuenta">
+                <i class="bi bi-person-circle"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Contenido principal -->
+<main class="site-main">
+    <div th:replace="${contenidoUsuario}">
+        <p>Contenido pendiente</p>
+    </div>
+</main>
+
+<!-- Pie de página -->
+<footer class="site-footer">
+    <div class="container">
+        <p class="footer-brand"><i class="bi bi-film"></i> PeliMatch</p>
+        <nav class="footer-nav">
+            <a th:href="@{/}">Inicio</a>
+            <a th:href="@{/peliculas}">Películas</a>
+            <a th:href="@{/series}">Series</a>
+        </nav>
+        <p class="footer-copy">&copy; 2026 PeliMatch — Catálogo de información de películas y series. Proyecto de curso.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+</html>

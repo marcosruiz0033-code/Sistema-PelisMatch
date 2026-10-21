@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{Fragments/UsuarioLayout :: base(~{::contenidoUsuario})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Series — PeliMatch</title>
+</head>
+<body>
+<div th:fragment="contenidoUsuario">
+
+    <h1 class="pagina-titulo">Series</h1>
+
+    <div class="grid-tarjetas" th:if="${!series.isEmpty()}">
+        <a class="tarjeta" th:each="s : ${series}" th:href="@{/series/{id}(id=${s.idSerie})}">
+            <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
+                 th:src="${s.imagen}" th:alt="${s.titulo}">
+            <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
+                <i class="bi bi-tv"></i>
+            </div>
+            <div class="card-body">
+                <p class="titulo" th:text="${s.titulo}">Título</p>
+                <p class="meta">
+                    <span th:text="${s.anio}">2025</span> ·
+                    <span th:text="${s.categoria.nombre}">Categoría</span>
+                </p>
+                <p class="meta" th:if="${s.temporadas != null}">
+                    <i class="bi bi-collection-play"></i>
+                    <span th:text="${s.temporadas}">1</span> temporadas ·
+                    <span th:text="${s.estado}">Estado</span>
+                </p>
+            </div>
+        </a>
+    </div>
+
+</div>
+</body>
+</html>

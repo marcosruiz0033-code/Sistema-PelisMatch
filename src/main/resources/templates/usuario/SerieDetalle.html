@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{Fragments/UsuarioLayout :: base(~{::contenidoUsuario})}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${serie.titulo} + ' — PeliMatch'">Serie — PeliMatch</title>
+</head>
+<body>
+<div th:fragment="contenidoUsuario">
+
+    <a th:href="@{/series}" class="volver"><i class="bi bi-arrow-left"></i> Volver al listado</a>
+
+    <div class="detalle-header">
+        <img class="detalle-poster" th:if="${serie.imagen != null and !serie.imagen.isEmpty()}"
+             th:src="${serie.imagen}" th:alt="${serie.titulo}">
+        <div class="detalle-poster detalle-poster-placeholder" th:unless="${serie.imagen != null and !serie.imagen.isEmpty()}">
+            <i class="bi bi-tv"></i>
+        </div>
+
+        <div class="detalle-info">
+            <h1 class="detalle-titulo" th:text="${serie.titulo}">Título</h1>
+
+            <p class="detalle-meta">
+                <span th:text="${serie.anio}">2025</span>
+                <span class="punto">·</span>
+                <span th:text="${serie.categoria.nombre}">Categoría</span>
+                <span class="punto" th:if="${serie.temporadas != null}">·</span>
+                <span th:if="${serie.temporadas != null}">
+                    <span th:text="${serie.temporadas}">1</span> temporadas
+                </span>
+            </p>
+
+            <p>
+                <span class="estado-badge" th:text="${serie.estado}">Estado</span>
+            </p>
+
+            <h2 class="seccion-titulo detalle-subtitulo">Sinopsis</h2>
+            <p class="detalle-sinopsis" th:text="${serie.sinopsis}">Sinopsis</p>
+
+            <!-- ===== Dónde ver ===== -->
+            <h2 class="seccion-titulo detalle-subtitulo">Dónde ver</h2>
+            <div class="plataformas">
+                <a class="plataforma-btn" th:if="${serie.urlNetflix != null and !serie.urlNetflix.isEmpty()}"
+                   th:href="${serie.urlNetflix}" target="_blank" rel="noopener noreferrer">
+                    <i class="bi bi-play-circle"></i> Netflix
+                </a>
+                <a class="plataforma-btn" th:if="${serie.urlPrimeVideo != null and !serie.urlPrimeVideo.isEmpty()}"
+                   th:href="${serie.urlPrimeVideo}" target="_blank" rel="noopener noreferrer">
+                    <i class="bi bi-play-circle"></i> Prime Video
+                </a>
+                <a class="plataforma-btn" th:if="${serie.urlDisneyPlus != null and !serie.urlDisneyPlus.isEmpty()}"
+                   th:href="${serie.urlDisneyPlus}" target="_blank" rel="noopener noreferrer">
+                    <i class="bi bi-play-circle"></i> Disney+
+                </a>
+                <a class="plataforma-btn" th:if="${serie.urlMax != null and !serie.urlMax.isEmpty()}"
+                   th:href="${serie.urlMax}" target="_blank" rel="noopener noreferrer">
+                    <i class="bi bi-play-circle"></i> Max
+                </a>
+                <a class="plataforma-btn" th:if="${serie.urlAppleTv != null and !serie.urlAppleTv.isEmpty()}"
+                   th:href="${serie.urlAppleTv}" target="_blank" rel="noopener noreferrer">
+                    <i class="bi bi-play-circle"></i> Apple TV+
+                </a>
+                <p class="sin-plataformas"
+                   th:if="${(serie.urlNetflix == null or serie.urlNetflix.isEmpty()) and
+                           (serie.urlPrimeVideo == null or serie.urlPrimeVideo.isEmpty()) and
+                           (serie.urlDisneyPlus == null or serie.urlDisneyPlus.isEmpty()) and
+                           (serie.urlMax == null or serie.urlMax.isEmpty()) and
+                           (serie.urlAppleTv == null or serie.urlAppleTv.isEmpty())}">
+                    Información de disponibilidad pendiente.
+                </p>
+            </div>
+    </div>
+
+</div>
+</body>
+</html>
