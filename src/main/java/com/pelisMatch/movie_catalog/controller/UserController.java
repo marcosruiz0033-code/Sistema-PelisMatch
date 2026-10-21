@@ -11,9 +11,4 @@ public class UserController {
         return "usuario/Home";
     }
 
-    @GetMapping("/series")
-    public String series() {
-        return "usuario/Series";
-    }
-
 }
