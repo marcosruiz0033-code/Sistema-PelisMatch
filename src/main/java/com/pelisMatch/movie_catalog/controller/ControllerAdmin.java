@@ -19,10 +19,12 @@ public class ControllerAdmin {
     }
     @GetMapping("/pedidos")
     public String pedidos (){
+
         return "Admin-vista/PedidosVista";
     }
     @GetMapping("/usuarios")
     public String usuarios (){
+
         return "Admin-vista/UsuariosVista";
     }
 
