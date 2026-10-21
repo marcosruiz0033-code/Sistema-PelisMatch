@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="base(contenidoUsuario)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <title>PeliMatch</title>
+</head>
+<body class="bg-dark text-white">
+
+<!-- Barra de navegación -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom border-secondary-subtle sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold fs-4" th:href="@{/}">
+            <i class="bi bi-film text-danger me-1"></i>PeliMatch
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuUsuario">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menuUsuario">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/peliculas}">Películas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/series}">Series</a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-person-circle fs-4"></i>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Contenido principal -->
+<div th:replace="${contenidoUsuario}">
+    <p>Contenido pendiente</p>
+</div>
+
+<!-- Pie de página -->
+<footer class="bg-black border-top border-secondary-subtle mt-5 py-4">
+    <div class="container text-center text-secondary small">
+        <p class="mb-1">
+            <i class="bi bi-film text-danger me-1"></i>PeliMatch — Catálogo de películas y series
+        </p>
+        <p class="mb-0">
+            <a th:href="@{/}" class="link-secondary text-decoration-none me-3">Inicio</a>
+            <a th:href="@{/peliculas}" class="link-secondary text-decoration-none me-3">Películas</a>
+            <a th:href="@{/series}" class="link-secondary text-decoration-none">Series</a>
+        </p>
+        <p class="mb-0 mt-2">&copy; 2026 PeliMatch — Proyecto de curso</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>
