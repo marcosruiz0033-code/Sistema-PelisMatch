@@ -350,15 +350,59 @@ a {
     margin-bottom: var(--section-gap);
 }
 
+.seccion-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.1rem;
+}
+
+.seccion-cabecera .seccion-titulo {
+    margin-bottom: 0;
+}
+
 .ver-mas {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
     font-size: var(--font-caption);
     font-weight: 600;
     color: var(--text-secondary);
     transition: color .2s ease;
 }
 
-.ver-mas:hover {
+.ver-mas:hover,
+.ver-mas:focus-visible {
     color: var(--text-primary);
+}
+
+.ver-mas-flecha {
+    font-size: .8rem;
+    transition: transform .35s ease;
+}
+
+.ver-mas:hover .ver-mas-flecha,
+.ver-mas:focus-visible .ver-mas-flecha {
+    transform: translateX(4px);
+}
+
+.ver-mas-texto {
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    margin-right: .45rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-12px, -50%);
+    transition: transform .35s ease, opacity .3s ease;
+}
+
+.ver-mas:hover .ver-mas-texto,
+.ver-mas:focus-visible .ver-mas-texto {
+    opacity: 1;
+    transform: translate(0, -50%);
 }
 
 .grid-tarjetas {

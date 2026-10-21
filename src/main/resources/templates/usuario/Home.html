@@ -82,10 +82,7 @@
 
     <!-- ===== Más series ===== -->
     <section class="seccion" th:if="${!seriesAdicionales.isEmpty()}">
-        <div class="d-flex justify-content-between align-items-center">
-            <h2 class="seccion-titulo">Más series</h2>
-            <a th:href="@{/series}" class="ver-mas">Ver todo <i class="bi bi-chevron-right"></i></a>
-        </div>
+        <div th:replace="~{Fragments/Secciones :: cabecera('Más series', '/series')}"></div>
         <div class="grid-tarjetas">
             <a class="tarjeta" th:each="s : ${seriesAdicionales}" th:href="@{/series/{id}(id=${s.idSerie})}">
                 <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
@@ -101,6 +98,48 @@
                     </p>
                 </div>
             </a>
+        </div>
+    </section>
+
+    <!-- ===== Lo más reciente ===== -->
+    <section class="seccion">
+        <div th:replace="~{Fragments/Secciones :: cabecera('Lo más reciente', '/peliculas')}"></div>
+        <div class="grid-tarjetas">
+            <div class="tarjeta">
+                <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                <div class="card-body">
+                    <p class="titulo">Próximamente</p>
+                    <p class="meta">Módulo de películas en desarrollo</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Películas actualizadas ===== -->
+    <section class="seccion">
+        <div th:replace="~{Fragments/Secciones :: cabecera('Películas actualizadas', '/peliculas')}"></div>
+        <div class="grid-tarjetas">
+            <div class="tarjeta">
+                <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                <div class="card-body">
+                    <p class="titulo">Próximamente</p>
+                    <p class="meta">Módulo de películas en desarrollo</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Estrenos top ===== -->
+    <section class="seccion">
+        <div th:replace="~{Fragments/Secciones :: cabecera('Estrenos top', '/peliculas')}"></div>
+        <div class="grid-tarjetas">
+            <div class="tarjeta">
+                <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                <div class="card-body">
+                    <p class="titulo">Próximamente</p>
+                    <p class="meta">Módulo de películas en desarrollo</p>
+                </div>
+            </div>
         </div>
     </section>
 
