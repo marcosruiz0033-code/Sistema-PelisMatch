@@ -34,16 +34,23 @@
     <section class="seccion">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="seccion-titulo">Destacados</h2>
-            <a th:href="@{/peliculas}" class="ver-mas">Ver todo <i class="bi bi-chevron-right"></i></a>
+            <a th:href="@{/series}" class="ver-mas">Ver todo <i class="bi bi-chevron-right"></i></a>
         </div>
         <div class="grid-tarjetas">
-            <div class="tarjeta" th:each="n : ${#numbers.sequence(1, 6)}">
-                <div class="poster-placeholder"><i class="bi bi-film"></i></div>
-                <div class="card-body">
-                    <p class="titulo">Título de ejemplo</p>
-                    <p class="meta">2025 · Película</p>
+            <a class="tarjeta" th:each="s : ${seriesDestacadas}" th:href="@{/series/{id}(id=${s.idSerie})}">
+                <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
+                     th:src="${s.imagen}" th:alt="${s.titulo}">
+                <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
+                    <i class="bi bi-tv"></i>
                 </div>
-            </div>
+                <div class="card-body">
+                    <p class="titulo" th:text="${s.titulo}">Título</p>
+                    <p class="meta">
+                        <span th:text="${s.anio}">2025</span> ·
+                        <span th:text="${s.categoria.nombre}">Categoría</span>
+                    </p>
+                </div>
+            </a>
         </div>
     </section>
 
@@ -54,13 +61,20 @@
             <a th:href="@{/series}" class="ver-mas">Ver todo <i class="bi bi-chevron-right"></i></a>
         </div>
         <div class="grid-tarjetas">
-            <div class="tarjeta" th:each="n : ${#numbers.sequence(1, 6)}">
-                <div class="poster-placeholder"><i class="bi bi-tv"></i></div>
-                <div class="card-body">
-                    <p class="titulo">Serie de ejemplo</p>
-                    <p class="meta">2025 · Serie</p>
+            <a class="tarjeta" th:each="s : ${seriesDestacadas}" th:href="@{/series/{id}(id=${s.idSerie})}">
+                <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
+                     th:src="${s.imagen}" th:alt="${s.titulo}">
+                <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
+                    <i class="bi bi-tv"></i>
                 </div>
-            </div>
+                <div class="card-body">
+                    <p class="titulo" th:text="${s.titulo}">Título</p>
+                    <p class="meta">
+                        <span th:text="${s.anio}">2025</span> ·
+                        <span th:text="${s.categoria.nombre}">Categoría</span>
+                    </p>
+                </div>
+            </a>
         </div>
     </section>
 
