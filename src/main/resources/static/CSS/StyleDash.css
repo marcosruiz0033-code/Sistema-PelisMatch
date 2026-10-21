@@ -1,0 +1,327 @@
+/* =========================
+      COLORES PRINCIPALES
+    ========================= */
+:root {
+    --naranja: #f97316;
+    --naranja-hover: #ea580c;
+    --fondo: #f8fafc;
+    --blanco: #ffffff;
+    --texto: #111827;
+    --gris: #cbd5e1;
+    --gris-texto: #6b7280;
+    --borde: #e5e7eb;
+}
+
+
+/* =========================
+   GENERAL
+========================= */
+
+body {
+    background: var(--fondo);
+    color: var(--texto);
+    margin: 0;
+}
+
+
+/* =========================
+   BARRA SUPERIOR
+========================= */
+
+.navbar {
+    height: 70px;
+    background-color: var(--blanco) !important;
+    border-bottom: 1px solid var(--borde) !important;
+    position: relative;
+}
+
+/* Texto "Bienvenido" */
+
+.navbar .text-secondary {
+    color: var(--gris-texto) !important;
+}
+
+/* Logo PeliMatch */
+
+.navbar .fs-4 {
+    color: var(--naranja);
+    font-size: 1.4rem !important;
+}
+
+/* Icono del logo */
+
+.navbar .bi-film {
+    color: var(--naranja);
+}
+
+/* Usuario */
+
+.navbar .fw-semibold {
+    color: var(--texto);
+}
+
+
+/* =========================
+   CUERPO
+========================= */
+
+.container-fluid {
+    padding: 0;
+}
+
+.row.min-vh-100 {
+    margin: 0;
+}
+
+
+/* =========================
+   MENU LATERAL
+========================= */
+
+/*
+   Adaptado al nuevo diseño:
+   antes: aside
+   ahora: .sidebar
+*/
+
+aside {
+    width: 260px;
+    min-height: calc(100vh - 70px);
+    background: #111827 !important;
+    border-right: none !important;
+    padding: 25px 15px !important;
+}
+
+/* Si tu HTML usa .sidebar también funcionará */
+
+.sidebar {
+    width: 260px;
+    min-height: calc(100vh - 70px);
+    background: #111827 !important;
+}
+
+
+/* =========================
+   ENLACES DEL MENU
+========================= */
+
+aside .nav-link,
+.sidebar .nav-link {
+    color: #cbd5e1 !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: 10px !important;
+    margin-bottom: 5px;
+    transition: all 0.25s ease;
+}
+
+
+/* Iconos */
+
+aside .nav-link i,
+.sidebar .nav-link i {
+    font-size: 1.1rem;
+    width: 25px;
+}
+
+
+/* =========================
+   EFECTO HOVER
+========================= */
+
+aside .nav-link:hover,
+.sidebar .nav-link:hover {
+    background: #f97316 !important;
+    color: white !important;
+    transform: none;
+}
+
+
+/* Icono en hover */
+
+aside .nav-link:hover i,
+.sidebar .nav-link:hover i {
+    color: white;
+}
+
+
+/* =========================
+   ENLACE ACTIVO
+========================= */
+
+aside .nav-link.active,
+.sidebar .nav-link.active {
+    background: #f97316 !important;
+    color: white !important;
+}
+
+
+/* =========================
+   CERRAR SESIÓN
+========================= */
+
+aside .text-danger,
+.sidebar .text-danger {
+    color: #f97316 !important;
+}
+
+aside .text-danger:hover,
+.sidebar .text-danger:hover {
+    background: #f97316 !important;
+    color: white !important;
+}
+
+
+/* =========================
+   CONTENIDO PRINCIPAL
+========================= */
+
+/*
+   Antes:
+   .contenido
+
+   Nuevo diseño:
+   .content
+*/
+
+.contenido,
+.content {
+    flex: 1;
+    background: #f8f9fa;
+    min-height: calc(100vh - 70px);
+    padding: 30px;
+}
+
+
+/* =========================
+   TITULOS
+========================= */
+
+.titulo-pagina {
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.subtitulo {
+    color: var(--gris-texto);
+}
+
+
+/* =========================
+   TARJETAS DEL DASHBOARD
+========================= */
+
+.card-dashboard {
+    background-color: var(--blanco);
+    border: none;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.card-dashboard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.10);
+}
+
+
+/* =========================
+   TARJETAS BOOTSTRAP
+========================= */
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    transition: 0.3s;
+}
+
+.card-header {
+    border-bottom: none;
+    font-weight: 600;
+}
+
+
+/* =========================
+   ICONOS DEL DASHBOARD
+========================= */
+
+/*
+   Compatible con:
+   .icon-dashboard
+   .icon-box
+*/
+
+.icon-dashboard,
+.icon-box {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.4rem;
+    background: #f97316;
+    color: white;
+}
+
+
+/* =========================
+   BOTONES
+========================= */
+
+.btn-pelimatch {
+    background-color: #f97316;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    transition: all 0.25s ease;
+}
+
+.btn-pelimatch:hover {
+    background-color: #ea580c;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(249, 115, 22, 0.25);
+}
+
+.btn-pelimatch:active {
+    transform: translateY(0);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+    aside,
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+    }
+
+    .contenido,
+    .content {
+        padding: 20px;
+    }
+
+    .navbar {
+        padding: 0 15px !important;
+    }
+
+    .navbar .position-absolute {
+        position: static !important;
+        transform: none !important;
+        margin: auto;
+    }
+}
