@@ -44,4 +44,19 @@ public class Serie {
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
+    @Column(length = 500)
+    private String urlNetflix;
+
+    @Column(length = 500)
+    private String urlPrimeVideo;
+
+    @Column(length = 500)
+    private String urlDisneyPlus;
+
+    @Column(length = 500)
+    private String urlMax;
+
+    @Column(length = 500)
+    private String urlAppleTv;
+
 }
