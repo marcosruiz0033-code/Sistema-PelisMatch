@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{Fragments/UsuarioLayout :: base(~{::contenidoUsuario})}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${serie.titulo} + ' — PeliMatch'">Serie — PeliMatch</title>
+</head>
+<body>
+<main th:fragment="contenidoUsuario">
+
+    <a th:href="@{/series}" class="volver"><i class="bi bi-arrow-left"></i> Volver al listado</a>
+
+    <div class="detalle-header">
+        <img class="detalle-poster" th:if="${serie.imagen != null and !serie.imagen.isEmpty()}"
+             th:src="${serie.imagen}" th:alt="${serie.titulo}">
+        <div class="detalle-poster detalle-poster-placeholder" th:unless="${serie.imagen != null and !serie.imagen.isEmpty()}">
+            <i class="bi bi-tv"></i>
+        </div>
+
+        <div class="detalle-info">
+            <h1 class="detalle-titulo" th:text="${serie.titulo}">Título</h1>
+
+            <p class="detalle-meta">
+                <span th:text="${serie.anio}">2025</span>
+                <span class="punto">·</span>
+                <span th:text="${serie.categoria.nombre}">Categoría</span>
+                <span class="punto" th:if="${serie.temporadas != null}">·</span>
+                <span th:if="${serie.temporadas != null}">
+                    <span th:text="${serie.temporadas}">1</span> temporadas
+                </span>
+            </p>
+
+            <p>
+                <span class="estado-badge" th:text="${serie.estado}">Estado</span>
+            </p>
+
+            <h2 class="seccion-titulo detalle-subtitulo">Sinopsis</h2>
+            <p class="detalle-sinopsis" th:text="${serie.sinopsis}">Sinopsis</p>
+        </div>
+    </div>
+
+</main>
+</body>
+</html>

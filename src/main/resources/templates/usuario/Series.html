@@ -10,7 +10,7 @@
     <h1 class="pagina-titulo">Series</h1>
 
     <div class="grid-tarjetas" th:if="${!series.isEmpty()}">
-        <div class="tarjeta" th:each="s : ${series}">
+        <a class="tarjeta" th:each="s : ${series}" th:href="@{/series/{id}(id=${s.idSerie})}">
             <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
                  th:src="${s.imagen}" th:alt="${s.titulo}">
             <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
@@ -28,7 +28,7 @@
                     <span th:text="${s.estado}">Estado</span>
                 </p>
             </div>
-        </div>
+        </a>
     </div>
 
 </main>
