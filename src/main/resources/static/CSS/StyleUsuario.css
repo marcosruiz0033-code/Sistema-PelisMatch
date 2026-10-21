@@ -1,0 +1,98 @@
+/* ===== Estilos base — Vista de usuario PeliMatch ===== */
+
+:root {
+    --color-fondo: #0f0f0f;
+    --color-superior: #000000;
+    --color-tarjeta: #1c1c1c;
+    --color-acentro: #e50914;
+    --color-texto: #ffffff;
+    --color-texto-suave: #9a9a9a;
+}
+
+body {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: "Segoe UI", Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* ===== Navbar ===== */
+
+.navbar {
+    background-color: var(--color-superior) !important;
+}
+
+.navbar-brand i,
+.navbar .nav-link:hover {
+    color: var(--color-acentro);
+}
+
+.nav-link {
+    color: var(--color-texto) !important;
+}
+
+.nav-link:hover {
+    color: var(--color-acentro) !important;
+}
+
+/* ===== Footer ===== */
+
+footer {
+    background-color: var(--color-superior) !important;
+}
+
+footer a:hover {
+    color: var(--color-acentro) !important;
+}
+
+/* ===== Títulos de sección ===== */
+
+.seccion-titulo {
+    color: var(--color-texto);
+    font-weight: 700;
+    border-left: 4px solid var(--color-acentro);
+    padding-left: .6rem;
+}
+
+/* ===== Tarjetas de contenido (series / películas) ===== */
+
+.tarjeta {
+    background-color: var(--color-tarjeta);
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    color: var(--color-texto);
+}
+
+.tarjeta .poster {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+}
+
+.tarjeta .card-body {
+    padding: .8rem;
+}
+
+.tarjeta .titulo {
+    font-size: .95rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.tarjeta .meta {
+    font-size: .8rem;
+    color: var(--color-texto-suave);
+}
+
+/* ===== Texto general ===== */
+
+.text-secondary {
+    color: var(--color-texto-suave) !important;
+}
