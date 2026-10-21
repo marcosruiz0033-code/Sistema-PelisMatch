@@ -15,6 +15,11 @@ public class PeliculaService {
         this.repository = repository;
     }
 
+    public Pelicula obtenerPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No existe la pelicula con id " + id));
+    }
+
     public List<Pelicula> listar() {
         return repository.findAll();
     }
