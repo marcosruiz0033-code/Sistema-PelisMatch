@@ -105,13 +105,16 @@
     <section class="seccion">
         <div th:replace="~{Fragments/Secciones :: cabecera('Lo más reciente', '/peliculas')}"></div>
         <div class="grid-tarjetas">
-            <div class="tarjeta">
+            <a class="tarjeta" th:each="p : ${peliculasRecientes}" th:href="@{/peliculas}">
                 <div class="poster-placeholder"><i class="bi bi-film"></i></div>
                 <div class="card-body">
-                    <p class="titulo">Próximamente</p>
-                    <p class="meta">Módulo de películas en desarrollo</p>
+                    <p class="titulo" th:text="${p.titulo}">Título</p>
+                    <p class="meta">
+                        <span th:text="${p.genero}">Género</span> ·
+                        <span th:text="${p.anio}">2025</span>
+                    </p>
                 </div>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -119,13 +122,16 @@
     <section class="seccion">
         <div th:replace="~{Fragments/Secciones :: cabecera('Películas actualizadas', '/peliculas')}"></div>
         <div class="grid-tarjetas">
-            <div class="tarjeta">
+            <a class="tarjeta" th:each="p : ${peliculasActualizadas}" th:href="@{/peliculas}">
                 <div class="poster-placeholder"><i class="bi bi-film"></i></div>
                 <div class="card-body">
-                    <p class="titulo">Próximamente</p>
-                    <p class="meta">Módulo de películas en desarrollo</p>
+                    <p class="titulo" th:text="${p.titulo}">Título</p>
+                    <p class="meta">
+                        <span th:text="${p.genero}">Género</span> ·
+                        <span th:text="${p.anio}">2025</span>
+                    </p>
                 </div>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -133,13 +139,16 @@
     <section class="seccion">
         <div th:replace="~{Fragments/Secciones :: cabecera('Estrenos top', '/peliculas')}"></div>
         <div class="grid-tarjetas">
-            <div class="tarjeta">
+            <a class="tarjeta" th:each="p : ${estrenosTop}" th:href="@{/peliculas}">
                 <div class="poster-placeholder"><i class="bi bi-film"></i></div>
                 <div class="card-body">
-                    <p class="titulo">Próximamente</p>
-                    <p class="meta">Módulo de películas en desarrollo</p>
+                    <p class="titulo" th:text="${p.titulo}">Título</p>
+                    <p class="meta">
+                        <span th:text="${p.genero}">Género</span> ·
+                        <span th:text="${p.anio}">2025</span>
+                    </p>
                 </div>
-            </div>
+            </a>
         </div>
     </section>
 
