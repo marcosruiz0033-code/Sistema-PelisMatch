@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pelicula.titulo} + ' - PelisMatch'">Película - PelisMatch</title>
+    <link rel="stylesheet" th:href="@{/CSS/peliculas.css}">
+</head>
+<body>
+
+<div th:replace="~{peliculas/fragmentos :: cabecera}"></div>
+
+<main class="wrap">
+    <a class="volver" th:href="@{/peliculas}">← Volver a películas</a>
+
+    <article class="detalle" th:object="${pelicula}">
+        <div class="poster grande" th:style="|--hue: ${pelicula.id * 47 % 360}|">
+            <img th:if="*{posterUrl != null and !posterUrl.isBlank()}" th:src="*{posterUrl}" th:alt="*{titulo}">
+            <span class="ph" th:unless="*{posterUrl != null and !posterUrl.isBlank()}" th:text="*{titulo}">Título</span>
+        </div>
+
+        <div class="info">
+            <h1 th:text="*{titulo}">Título</h1>
+
+            <p class="meta">
+                <span class="rate" th:if="*{puntuacion != null}"
+                      th:text="'★ ' + ${#numbers.formatDecimal(pelicula.puntuacion, 1, 'COMMA', 1, 'POINT')} + '/10'">★ 8.5/10</span>
+                <span class="chip" th:text="*{anio}">2026</span>
+                <span class="chip" th:if="*{duracion != null}" th:text="*{duracion} + ' min'">120 min</span>
+                <a class="chip chip-link" th:href="@{/peliculas(genero=*{genero})}" th:text="*{genero}">Género</a>
+            </p>
+
+            <h2>Sinopsis</h2>
+            <p class="sinopsis" th:text="*{descripcion}">Descripción</p>
+
+            <dl class="datos">
+                <dt>Director</dt>
+                <dd th:text="*{director != null and !director.isBlank()} ? *{director} : 'Sin datos'">Director</dd>
+
+                <dt>Reparto</dt>
+                <dd>
+                    <span th:if="*{reparto == null or reparto.isBlank()}">Sin datos</span>
+                    <span class="chip" th:each="a : ${#strings.listSplit(pelicula.reparto, ',')}"
+                          th:if="*{reparto != null and !reparto.isBlank()}"
+                          th:text="${#strings.trim(a)}">Actor</span>
+                </dd>
+            </dl>
+        </div>
+    </article>
+
+    <section class="rel" th:if="${!relacionadas.isEmpty()}">
+        <h2 class="titulo-s">Más de <span th:text="${pelicula.genero}">género</span></h2>
+        <div class="grid cuatro">
+            <a class="card" th:each="p : ${relacionadas}" th:href="@{/peliculas/{id}(id=${p.id})}">
+                <div class="poster" th:style="|--hue: ${p.id * 47 % 360}|">
+                    <img th:if="${p.posterUrl != null and !p.posterUrl.isBlank()}"
+                         th:src="${p.posterUrl}" th:alt="${p.titulo}" loading="lazy">
+                    <span class="ph" th:unless="${p.posterUrl != null and !p.posterUrl.isBlank()}"
+                          th:text="${p.titulo}">Título</span>
+                    <span class="year" th:text="${p.anio}">2026</span>
+                </div>
+                <h3 th:text="${p.titulo}">Título</h3>
+            </a>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{peliculas/fragmentos :: pie}"></div>
+</body>
+</html>
