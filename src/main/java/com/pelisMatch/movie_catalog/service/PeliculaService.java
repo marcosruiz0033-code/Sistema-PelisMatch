@@ -28,6 +28,10 @@ public class PeliculaService {
         return repository.findByGeneroIgnoreCase(genero);
     }
 
+    public List<Pelicula> buscarPorTitulo(String titulo) {
+        return repository.findByTituloContainingIgnoreCase(titulo);
+    }
+
     public Optional<Pelicula> buscarPorId(Long id) {
         return repository.findById(id);
     }

@@ -28,9 +28,13 @@
         </nav>
 
         <div class="header-right">
-            <button class="icon-btn" type="button" aria-label="Buscar">
-                <i class="bi bi-search"></i>
-            </button>
+            <form class="search-form" th:action="@{/buscar}" method="get" role="search">
+                <label class="visually-hidden" for="busqueda">Buscar películas o series</label>
+                <input id="busqueda" name="q" type="search" placeholder="Buscar..." th:value="${consulta}">
+                <button class="icon-btn" type="submit" aria-label="Buscar">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
             <button class="icon-btn" type="button" aria-label="Cuenta">
                 <i class="bi bi-person-circle"></i>
             </button>

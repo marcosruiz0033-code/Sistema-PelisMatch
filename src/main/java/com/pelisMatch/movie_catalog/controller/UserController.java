@@ -7,6 +7,7 @@ import com.pelisMatch.movie_catalog.service.SerieService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -33,6 +34,21 @@ public class UserController {
         model.addAttribute("estrenosTop", sublista(peliculas, 10, 15));
         model.addAttribute("paginaActiva", "inicio");
         return "usuario/Home";
+    }
+
+    @GetMapping("/buscar")
+    public String buscar(@RequestParam(defaultValue = "") String q, Model model) {
+        String consulta = q.trim();
+
+        model.addAttribute("consulta", consulta);
+        model.addAttribute("peliculas", consulta.isBlank()
+                ? List.of()
+                : peliculaService.buscarPorTitulo(consulta));
+        model.addAttribute("series", consulta.isBlank()
+                ? List.of()
+                : serieService.buscarPorTitulo(consulta));
+        model.addAttribute("paginaActiva", "");
+        return "usuario/Search";
     }
 
     private List<Pelicula> sublista(List<Pelicula> peliculas, int desde, int hasta) {
