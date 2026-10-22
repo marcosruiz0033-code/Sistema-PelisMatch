@@ -18,7 +18,9 @@
 
 <main>
     <!-- Destacada: la primera película de la lista -->
-    <section class="hero" th:if="${!peliculas.isEmpty()}" th:with="d=${peliculas[0]}"
+    <section class="hero"
+             th:if="${peliculas != null and !#lists.isEmpty(peliculas)}"
+             th:with="d=${peliculas[0]}"
              th:style="|--hue: ${d.id * 47 % 360}|">
         <div class="hero-info">
             <h1 th:text="${d.titulo}">Título</h1>
@@ -68,12 +70,6 @@
                 <div class="card-body">
                     <h3 th:text="${p.titulo}">Título</h3>
                     <p class="sub"><span th:text="${p.genero}">Género</span> · <span th:text="${p.anio}">2025</span></p>
-                    <div class="card-actions">
-                        <a th:href="@{/peliculas/editar/{id}(id=${p.id})}">Editar</a>
-                        <form th:action="@{/peliculas/eliminar/{id}(id=${p.id})}" method="post">
-                            <button type="submit" class="link-danger">Eliminar</button>
-                        </form>
-                    </div>
                 </div>
             </article>
         </div>

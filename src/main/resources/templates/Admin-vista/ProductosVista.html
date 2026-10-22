@@ -6,7 +6,234 @@
 </head>
 <body>
     <main th:fragment="contenidoAdmin" class="p-4 content">
-        <p>hola productos </p>
+        <!-- Encabezado -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <div>
+                <h1 class="fw-bold mb-1">Administrar películas</h1>
+                <p class="text-muted mb-0">
+                    Gestiona el catálogo de películas de PelisMatch.
+                </p>
+            </div>
+
+            <a th:href="@{/admin/peliculas/nueva}"
+               class="btn btn-primary rounded-pill px-4 py-2">
+                <i class="bi bi-plus-lg me-2"></i>
+                Agregar película
+            </a>
+        </div>
+
+        <!-- Resumen -->
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-md-4">
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body d-flex align-items-center gap-3 p-4">
+                        <div class="rounded-3 bg-primary-subtle text-primary p-3">
+                            <i class="bi bi-film fs-3"></i>
+                        </div>
+                        <div>
+                            <p class="text-muted mb-1">Total de películas</p>
+                            <h3 class="fw-bold mb-0"
+                                th:text="${peliculas != null ? #lists.size(peliculas) : 0}">
+                                0
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-8">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-body d-flex align-items-center p-4">
+                        <div>
+                            <h5 class="fw-semibold mb-1">Tu catálogo, bajo control</h5>
+                            <p class="text-muted mb-0">
+                                Agrega películas, actualiza su información o elimina registros.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de películas -->
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-header bg-white border-0 p-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                    <div>
+                        <h5 class="fw-bold mb-1">Listado de películas</h5>
+                        <p class="text-muted small mb-0">
+                            Consulta y administra las películas registradas.
+                        </p>
+                    </div>
+
+                    <div class="input-group" style="max-width: 320px;">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="bi bi-search"></i>
+                    </span>
+                        <input type="text"
+                               id="buscarPelicula"
+                               class="form-control bg-light border-start-0"
+                               placeholder="Buscar película...">
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle table-hover mb-0"
+                       id="tablaPeliculas">
+
+                    <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">ID</th>
+                        <th>Título</th>
+                        <th>Género</th>
+                        <th>Director</th>
+                        <th>Año</th>
+                        <th>Descripción</th>
+                        <th class="text-center pe-4">Acciones</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <!-- Mensaje cuando no existen películas -->
+                    <tr th:if="${peliculas == null or #lists.isEmpty(peliculas)}">
+                        <td colspan="7" class="text-center py-5">
+                            <i class="bi bi-film display-5 text-muted"></i>
+                            <h5 class="mt-3">No hay películas registradas</h5>
+                            <p class="text-muted">
+                                Agrega tu primera película para comenzar.
+                            </p>
+                            <a th:href="@{/admin/peliculas/nueva}"
+                               class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-plus-lg me-2"></i>
+                                Agregar película
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Mostrar películas -->
+                    <tr th:each="p : ${peliculas}" class="fila-pelicula">
+
+                        <td class="ps-4 text-muted"
+                            th:text="${p.id}">
+                            1
+                        </td>
+
+                        <td>
+                            <div class="fw-semibold"
+                                 th:text="${p.titulo}">
+                                Título de película
+                            </div>
+                        </td>
+
+                        <td>
+                        <span class="badge rounded-pill text-bg-primary"
+                              th:text="${p.genero}">
+                            Género
+                        </span>
+                        </td>
+
+                        <td th:text="${p.director}">
+                            Director
+                        </td>
+
+                        <td th:text="${p.anio}">
+                            2025
+                        </td>
+
+                        <td>
+                        <span th:text="${p.descripcion}"
+                              class="d-inline-block text-truncate"
+                              style="max-width: 220px;"
+                              th:title="${p.descripcion}">
+                            Descripción
+                        </span>
+                        </td>
+
+                        <td class="text-center pe-4">
+                            <div class="d-flex justify-content-center gap-2">
+
+                                <!-- Editar -->
+                                <a th:href="@{/admin/peliculas/editar/{id}(id=${p.id})}"
+                                   class="btn btn-sm btn-outline-primary rounded-3"
+                                   title="Editar película"
+                                   aria-label="Editar película">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+
+                                <!-- Eliminar -->
+                                <form th:action="@{/admin/peliculas/eliminar/{id}(id=${p.id})}"
+                                      method="post"
+                                      onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta película?');">
+
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-danger rounded-3"
+                                            title="Eliminar película"
+                                            aria-label="Eliminar película">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+
+                                </form>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    <!-- Mensaje de búsqueda sin resultados -->
+                    <tr id="sinResultados" style="display: none;">
+                        <td colspan="7" class="text-center text-muted py-4">
+                            No se encontraron películas con ese nombre.
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="card-footer bg-white border-0 p-3">
+                <small class="text-muted">
+                    Panel de administración · PelisMatch
+                </small>
+            </div>
+
+        </div>
+
+        <!-- Buscador de la tabla -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const buscador = document.getElementById('buscarPelicula');
+                const filas = document.querySelectorAll(
+                    '#tablaPeliculas tbody tr.fila-pelicula'
+                );
+                const sinResultados = document.getElementById('sinResultados');
+
+                buscador.addEventListener('input', function () {
+                    const texto = this.value.toLowerCase().trim();
+                    let visibles = 0;
+
+                    filas.forEach(function (fila) {
+                        const coincide = fila.textContent
+                            .toLowerCase()
+                            .includes(texto);
+
+                        fila.style.display = coincide ? '' : 'none';
+
+                        if (coincide) {
+                            visibles++;
+                        }
+                    });
+
+                    sinResultados.style.display =
+                        visibles === 0 && filas.length > 0 ? '' : 'none';
+                });
+            });
+        </script>
+
     </main>
 </body>
 </html>
