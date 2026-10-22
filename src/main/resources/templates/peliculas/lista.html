@@ -4,81 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PelisMatch - Películas</title>
-   <link rel="stylesheet" th:href="@{/CSS/peliculas.css}">
+    <link rel="stylesheet" th:href="@{/CSS/peliculas.css}">
 </head>
 <body>
 
-<header class="nav">
-    <a class="logo" th:href="@{/peliculas}"><span class="logo-mark"></span>Pelis<b>Match</b></a>
-    <nav>
-        <a th:href="@{/peliculas}" class="active">Películas</a>
-        <a th:href="@{/peliculas/nueva}">Agregar película</a>
-    </nav>
-</header>
+<div th:replace="~{peliculas/fragmentos :: cabecera}"></div>
 
-<main>
-    <!-- Destacada: la primera película de la lista -->
-    <section class="hero" th:if="${!peliculas.isEmpty()}" th:with="d=${peliculas[0]}"
-             th:style="|--hue: ${d.id * 47 % 360}|">
-        <div class="hero-info">
-            <h1 th:text="${d.titulo}">Título</h1>
-            <p class="meta">
-                <span class="badge" th:text="${d.genero}">Género</span>
-                <span th:text="${d.anio}">2025</span>
-                <span th:text="${d.director}">Director</span>
-            </p>
-            <p class="desc" th:text="${d.descripcion}">Descripción</p>
-            <div class="actions">
-                <a class="btn btn-primary" href="#todas">▶ Ver ahora</a>
-                <a class="btn" href="#">＋ Mis favoritos</a>
-            </div>
+<main class="wrap layout">
+
+    <section class="main-col">
+        <h1 class="titulo"
+            th:text="${generoActual != null and !generoActual.isBlank()} ? ${generoActual}
+                     : (${q != null and !q.isBlank()} ? |Resultados para “${q}”| : 'Películas')">Películas</h1>
+
+        <div class="empty" th:if="${peliculas.isEmpty()}">
+            <h2>No encontramos películas</h2>
+            <p>Prueba con otro título o elige otro género.</p>
+            <a class="btn" th:href="@{/peliculas}">Ver todas</a>
         </div>
-    </section>
 
-    <section class="empty" th:if="${peliculas.isEmpty()}">
-        <h2>Aún no hay películas</h2>
-        <p>Agrega la primera para armar tu catálogo.</p>
-        <a class="btn btn-primary" th:href="@{/peliculas/nueva}">Agregar película</a>
-    </section>
-
-    <!-- Top con números grandes -->
-    <section class="row" th:if="${!peliculas.isEmpty()}">
-        <h2>Top películas del día</h2>
-        <div class="top">
-            <article class="top-item" th:each="p, st : ${peliculas}" th:if="${st.index < 8}">
-                <span class="rank" th:text="${st.count}">1</span>
+        <div class="grid" th:unless="${peliculas.isEmpty()}">
+            <a class="card" th:each="p : ${peliculas}" th:href="@{/peliculas/{id}(id=${p.id})}">
                 <div class="poster" th:style="|--hue: ${p.id * 47 % 360}|">
-                    <span th:text="${p.titulo}">Título</span>
-                </div>
-            </article>
-        </div>
-    </section>
+                    <img th:if="${p.posterUrl != null and !p.posterUrl.isBlank()}"
+                         th:src="${p.posterUrl}" th:alt="${p.titulo}" loading="lazy">
+                    <span class="ph" th:unless="${p.posterUrl != null and !p.posterUrl.isBlank()}"
+                          th:text="${p.titulo}">Título</span>
+                    <span class="year" th:text="${p.anio}">2026</span>
 
-    <!-- Todas -->
-    <section class="row" id="todas" th:if="${!peliculas.isEmpty()}">
-        <div class="row-head">
-            <h2>Películas</h2>
-            <a class="btn btn-primary" th:href="@{/peliculas/nueva}">＋ Nueva película</a>
-        </div>
-        <div class="grid">
-            <article class="card" th:each="p : ${peliculas}">
-                <div class="poster" th:style="|--hue: ${p.id * 47 % 360}|">
-                    <span th:text="${p.titulo}">Título</span>
-                </div>
-                <div class="card-body">
-                    <h3 th:text="${p.titulo}">Título</h3>
-                    <p class="sub"><span th:text="${p.genero}">Género</span> · <span th:text="${p.anio}">2025</span></p>
-                    <div class="card-actions">
-                        <a th:href="@{/peliculas/editar/{id}(id=${p.id})}">Editar</a>
-                        <form th:action="@{/peliculas/eliminar/{id}(id=${p.id})}" method="post">
-                            <button type="submit" class="link-danger">Eliminar</button>
-                        </form>
+                    <!-- Ficha rápida al pasar el cursor -->
+                    <div class="pop">
+                        <strong th:text="${p.titulo}">Título</strong>
+                        <p class="pop-meta">
+                            <span class="rate" th:if="${p.puntuacion != null}"
+                                  th:text="${#numbers.formatDecimal(p.puntuacion, 1, 'COMMA', 1, 'POINT')} + '/10'">8.5/10</span>
+                            <span th:text="${p.anio}">2026</span>
+                            <span th:if="${p.duracion != null}" th:text="${p.duracion} + ' min'">120 min</span>
+                        </p>
+                        <p class="pop-desc" th:text="${#strings.abbreviate(p.descripcion, 110)}">Descripción</p>
                     </div>
                 </div>
-            </article>
+                <h3 th:text="${p.titulo}">Título</h3>
+            </a>
         </div>
     </section>
+
+    <aside class="side" th:if="${!masValoradas.isEmpty()}">
+        <h2 class="side-title">Más valoradas</h2>
+        <a class="top" th:each="p, st : ${masValoradas}" th:href="@{/peliculas/{id}(id=${p.id})}">
+            <div class="mini" th:style="|--hue: ${p.id * 47 % 360}|">
+                <img th:if="${p.posterUrl != null and !p.posterUrl.isBlank()}"
+                     th:src="${p.posterUrl}" th:alt="${p.titulo}" loading="lazy">
+                <span class="rank" th:text="|#${st.count}|">#1</span>
+            </div>
+            <div class="top-info">
+                <h3 th:text="${p.titulo}">Título</h3>
+                <p>
+                    <span class="rate" th:text="${#numbers.formatDecimal(p.puntuacion, 1, 'COMMA', 1, 'POINT')}">8.5</span><small>/10</small>
+                    <span class="muted" th:text="${p.anio}">2026</span>
+                </p>
+            </div>
+        </a>
+    </aside>
+
 </main>
 
+<div th:replace="~{peliculas/fragmentos :: pie}"></div>
 </body>
 </html>
