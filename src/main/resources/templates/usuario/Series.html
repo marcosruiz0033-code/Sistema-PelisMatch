@@ -7,29 +7,183 @@
 <body>
 <div th:fragment="contenidoUsuario">
 
-    <h1 class="pagina-titulo">Series</h1>
-
-    <div class="grid-tarjetas" th:if="${!series.isEmpty()}">
-        <a class="tarjeta" th:each="s : ${series}" th:href="@{/series/{id}(id=${s.idSerie})}">
-            <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
+    <!-- ===== 1. Hero destacado (sin carrusel) ===== -->
+    <section class="banner hero-destacado" th:if="${!series.isEmpty()}" th:with="s=${series[0]}">
+        <div class="banner-slide">
+            <img class="banner-poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
                  th:src="${s.imagen}" th:alt="${s.titulo}">
-            <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
+            <div class="banner-poster banner-poster-placeholder"
+                 th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
                 <i class="bi bi-tv"></i>
             </div>
-            <div class="card-body">
-                <p class="titulo" th:text="${s.titulo}">Título</p>
-                <p class="meta">
-                    <span th:text="${s.anio}">2025</span> ·
-                    <span th:text="${s.categoria.nombre}">Categoría</span>
-                </p>
-                <p class="meta" th:if="${s.temporadas != null}">
-                    <i class="bi bi-collection-play"></i>
-                    <span th:text="${s.temporadas}">1</span> temporadas ·
-                    <span th:text="${s.estado}">Estado</span>
-                </p>
+            <div class="banner-velo"></div>
+            <div class="banner-contenido">
+                <div class="banner-info">
+                    <span class="banner-badge">Destacado</span>
+                    <h1 class="banner-titulo" th:text="${s.titulo}">Título</h1>
+                    <p class="banner-meta">
+                        <span th:text="${s.anio}">2025</span> ·
+                        <span th:text="${s.categoria.nombre}">Categoría</span>
+                        <span th:if="${s.temporadas != null}">
+                            · <span th:text="${s.temporadas}">1</span> temporadas
+                        </span>
+                    </p>
+                    <p class="banner-sinopsis" th:text="${s.sinopsis}">Sinopsis</p>
+                    <a class="btn-custom btn-custom-primary banner-boton"
+                       th:href="@{/series/{id}(id=${s.idSerie})}">
+                        <i class="bi bi-info-circle"></i> Ver detalles
+                    </a>
+                </div>
             </div>
+        </div>
+        <a class="banner-ver-todo" href="#catalogo">
+            Ver catálogo <i class="bi bi-chevron-right"></i>
         </a>
-    </div>
+    </section>
+
+    <section class="banner hero-destacado" th:if="${series.isEmpty()}">
+        <div class="banner-slide">
+            <div class="banner-poster banner-poster-placeholder">
+                <i class="bi bi-tv"></i>
+            </div>
+            <div class="banner-velo"></div>
+            <div class="banner-contenido">
+                <div class="banner-info">
+                    <span class="banner-badge">Destacado</span>
+                    <h1 class="banner-titulo">Tu serie destacada</h1>
+                    <p class="banner-meta">Año · Categoría · Temporadas</p>
+                    <p class="banner-sinopsis">
+                        Aquí aparecerá la sinopsis de la serie destacada cuando agregues contenido
+                        desde el panel de administración.
+                    </p>
+                    <span class="btn-custom btn-custom-primary banner-boton">
+                        <i class="bi bi-info-circle"></i> Ver detalles
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 2. Top series más vistas ===== -->
+    <section class="seccion">
+        <div class="seccion-cabecera">
+            <h2 class="seccion-titulo">Top series más vistas</h2>
+        </div>
+
+        <div class="top-vistos">
+            <div class="top-visto" th:each="i : ${#numbers.sequence(0, 4)}"
+                 th:with="s=${i < #lists.size(series) ? series[i] : null}">
+                <span class="top-rank" th:text="${i + 1}">1</span>
+
+                <a class="tarjeta" th:if="${s != null}" th:href="@{/series/{id}(id=${s.idSerie})}">
+                    <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
+                         th:src="${s.imagen}" th:alt="${s.titulo}">
+                    <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
+                        <i class="bi bi-tv"></i>
+                    </div>
+                    <div class="card-body">
+                        <p class="titulo" th:text="${s.titulo}">Título</p>
+                        <p class="meta">
+                            <span th:text="${s.anio}">2025</span> ·
+                            <span th:text="${s.categoria.nombre}">Categoría</span>
+                        </p>
+                    </div>
+                </a>
+
+                <div class="tarjeta tarjeta-vacia" th:if="${s == null}">
+                    <div class="poster-placeholder"><i class="bi bi-tv"></i></div>
+                    <div class="card-body">
+                        <p class="titulo">Próximamente</p>
+                        <p class="meta">Serie por agregar</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 3. Catálogo de series ===== -->
+    <section class="seccion" id="catalogo">
+        <div class="catalogo-encabezado">
+            <div class="catalogo-titulo-grupo">
+                <h2 class="seccion-titulo">Todas las series</h2>
+                <p class="catalogo-descripcion">Filtra por categoría, año o popularidad.</p>
+            </div>
+
+            <form class="catalogo-filtros" action="#" method="get">
+                <div class="filtro-campo">
+                    <label for="filtroGenero">Género</label>
+                    <select id="filtroGenero" name="genero">
+                        <option value="">Todos</option>
+                        <option value="Accion">Acción</option>
+                        <option value="Comedia">Comedia</option>
+                        <option value="Drama">Drama</option>
+                        <option value="Terror">Terror</option>
+                        <option value="Ciencia-ficcion">Ciencia ficción</option>
+                        <option value="Animacion">Animación</option>
+                        <option value="Suspenso">Suspenso</option>
+                        <option value="Aventura">Aventura</option>
+                    </select>
+                </div>
+
+                <div class="filtro-campo">
+                    <label for="filtroOrden">Ordenar por</label>
+                    <select id="filtroOrden" name="orden">
+                        <option value="populares">Más populares</option>
+                        <option value="recientes">Más recientes</option>
+                        <option value="antiguas">Más antiguas</option>
+                        <option value="az">A - Z</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="filtro-btn">
+                    <i class="bi bi-funnel"></i> Aplicar
+                </button>
+            </form>
+        </div>
+
+        <div class="grid-tarjetas catalogo-grid">
+            <th:block th:each="i : ${#numbers.sequence(0, 13)}"
+                      th:with="s=${i < #lists.size(series) ? series[i] : null}">
+                <a class="tarjeta" th:if="${s != null}" th:href="@{/series/{id}(id=${s.idSerie})}">
+                    <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
+                         th:src="${s.imagen}" th:alt="${s.titulo}">
+                    <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
+                        <i class="bi bi-tv"></i>
+                    </div>
+                    <div class="card-body">
+                        <p class="titulo" th:text="${s.titulo}">Título</p>
+                        <p class="meta">
+                            <span th:text="${s.anio}">2025</span> ·
+                            <span th:text="${s.categoria.nombre}">Categoría</span>
+                        </p>
+                    </div>
+                </a>
+
+                <div class="tarjeta tarjeta-vacia" th:if="${s == null}">
+                    <div class="poster-placeholder"><i class="bi bi-tv"></i></div>
+                    <div class="card-body">
+                        <p class="titulo">Próximamente</p>
+                        <p class="meta">Serie por agregar</p>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+
+        <!-- ===== 4. Paginación ===== -->
+        <nav class="paginacion" aria-label="Paginación de series">
+            <button class="pagina-btn" type="button" aria-label="Página anterior" disabled>
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <a class="pagina-btn active" href="#" aria-current="page">1</a>
+            <a class="pagina-btn" href="#">2</a>
+            <a class="pagina-btn" href="#">3</a>
+            <span class="pagina-ellipsis">…</span>
+            <a class="pagina-btn" href="#">10</a>
+            <button class="pagina-btn" type="button" aria-label="Página siguiente">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        </nav>
+    </section>
 
 </div>
 </body>

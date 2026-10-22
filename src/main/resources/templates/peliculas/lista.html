@@ -7,36 +7,169 @@
 <body>
 <div th:fragment="contenidoUsuario">
 
-    <h1 class="pagina-titulo">Películas</h1>
-
-    <div class="grid-tarjetas" th:if="${!peliculas.isEmpty()}">
-        <article class="tarjeta" th:each="p : ${peliculas}">
-            <div class="poster-placeholder">
+    <!-- ===== 1. Hero destacado (sin carrusel) ===== -->
+    <section class="banner hero-destacado" th:if="${!peliculas.isEmpty()}" th:with="p=${peliculas[0]}">
+        <div class="banner-slide">
+            <div class="banner-poster banner-poster-placeholder">
                 <i class="bi bi-film"></i>
             </div>
-            <div class="card-body">
-                <p class="titulo" th:text="${p.titulo}">Título</p>
-                <p class="meta">
-                    <span th:text="${p.genero}">Género</span> ·
-                    <span th:text="${p.anio}">2025</span>
-                </p>
-                <p class="meta" th:text="${p.director}">Director</p>
-            </div>
-        </article>
-    </div>
-
-    <section class="seccion" th:if="${peliculas.isEmpty()}">
-        <div class="grid-tarjetas">
-            <div class="tarjeta">
-                <div class="poster-placeholder">
-                    <i class="bi bi-film"></i>
-                </div>
-                <div class="card-body">
-                    <p class="titulo">Sin películas</p>
-                    <p class="meta">Agrega películas desde el panel admin</p>
+            <div class="banner-velo"></div>
+            <div class="banner-contenido">
+                <div class="banner-info">
+                    <span class="banner-badge">Destacado</span>
+                    <h1 class="banner-titulo" th:text="${p.titulo}">Título</h1>
+                    <p class="banner-meta">
+                        <span th:text="${p.genero}">Género</span> ·
+                        <span th:text="${p.anio}">2025</span> ·
+                        <span th:text="${p.director}">Director</span>
+                    </p>
+                    <p class="banner-sinopsis" th:text="${p.descripcion}">Descripción</p>
+                    <a class="btn-custom btn-custom-primary banner-boton" href="#catalogo">
+                        <i class="bi bi-collection-play"></i> Ver catálogo
+                    </a>
                 </div>
             </div>
         </div>
+        <a class="banner-ver-todo" href="#catalogo">
+            Ver catálogo <i class="bi bi-chevron-right"></i>
+        </a>
+    </section>
+
+    <section class="banner hero-destacado" th:if="${peliculas.isEmpty()}">
+        <div class="banner-slide">
+            <div class="banner-poster banner-poster-placeholder">
+                <i class="bi bi-film"></i>
+            </div>
+            <div class="banner-velo"></div>
+            <div class="banner-contenido">
+                <div class="banner-info">
+                    <span class="banner-badge">Destacado</span>
+                    <h1 class="banner-titulo">Tu película destacada</h1>
+                    <p class="banner-meta">Género · Año · Director</p>
+                    <p class="banner-sinopsis">
+                        Aquí aparecerá la descripción de la película destacada cuando agregues contenido
+                        desde el panel de administración.
+                    </p>
+                    <span class="btn-custom btn-custom-primary banner-boton">
+                        <i class="bi bi-collection-play"></i> Ver catálogo
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 2. Top películas más vistas ===== -->
+    <section class="seccion">
+        <div class="seccion-cabecera">
+            <h2 class="seccion-titulo">Top películas más vistas</h2>
+        </div>
+
+        <div class="top-vistos">
+            <div class="top-visto" th:each="i : ${#numbers.sequence(0, 4)}"
+                 th:with="p=${i < #lists.size(peliculas) ? peliculas[i] : null}">
+                <span class="top-rank" th:text="${i + 1}">1</span>
+
+                <article class="tarjeta" th:if="${p != null}">
+                    <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                    <div class="card-body">
+                        <p class="titulo" th:text="${p.titulo}">Título</p>
+                        <p class="meta">
+                            <span th:text="${p.genero}">Género</span> ·
+                            <span th:text="${p.anio}">2025</span>
+                        </p>
+                    </div>
+                </article>
+
+                <div class="tarjeta tarjeta-vacia" th:if="${p == null}">
+                    <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                    <div class="card-body">
+                        <p class="titulo">Próximamente</p>
+                        <p class="meta">Película por agregar</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 3. Catálogo de películas ===== -->
+    <section class="seccion" id="catalogo">
+        <div class="catalogo-encabezado">
+            <div class="catalogo-titulo-grupo">
+                <h2 class="seccion-titulo">Todas las películas</h2>
+                <p class="catalogo-descripcion">Filtra por género, año o popularidad.</p>
+            </div>
+
+            <form class="catalogo-filtros" action="#" method="get">
+                <div class="filtro-campo">
+                    <label for="filtroGenero">Género</label>
+                    <select id="filtroGenero" name="genero">
+                        <option value="">Todos</option>
+                        <option value="Accion">Acción</option>
+                        <option value="Comedia">Comedia</option>
+                        <option value="Drama">Drama</option>
+                        <option value="Terror">Terror</option>
+                        <option value="Ciencia-ficcion">Ciencia ficción</option>
+                        <option value="Animacion">Animación</option>
+                        <option value="Suspenso">Suspenso</option>
+                        <option value="Aventura">Aventura</option>
+                    </select>
+                </div>
+
+                <div class="filtro-campo">
+                    <label for="filtroOrden">Ordenar por</label>
+                    <select id="filtroOrden" name="orden">
+                        <option value="populares">Más populares</option>
+                        <option value="recientes">Más recientes</option>
+                        <option value="antiguas">Más antiguas</option>
+                        <option value="az">A - Z</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="filtro-btn">
+                    <i class="bi bi-funnel"></i> Aplicar
+                </button>
+            </form>
+        </div>
+
+        <div class="grid-tarjetas catalogo-grid">
+            <th:block th:each="i : ${#numbers.sequence(0, 13)}"
+                      th:with="p=${i < #lists.size(peliculas) ? peliculas[i] : null}">
+                <article class="tarjeta" th:if="${p != null}">
+                    <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                    <div class="card-body">
+                        <p class="titulo" th:text="${p.titulo}">Título</p>
+                        <p class="meta">
+                            <span th:text="${p.genero}">Género</span> ·
+                            <span th:text="${p.anio}">2025</span>
+                        </p>
+                        <p class="meta" th:text="${p.director}">Director</p>
+                    </div>
+                </article>
+
+                <div class="tarjeta tarjeta-vacia" th:if="${p == null}">
+                    <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                    <div class="card-body">
+                        <p class="titulo">Próximamente</p>
+                        <p class="meta">Película por agregar</p>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+
+        <!-- ===== 4. Paginación ===== -->
+        <nav class="paginacion" aria-label="Paginación de películas">
+            <button class="pagina-btn" type="button" aria-label="Página anterior" disabled>
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <a class="pagina-btn active" href="#" aria-current="page">1</a>
+            <a class="pagina-btn" href="#">2</a>
+            <a class="pagina-btn" href="#">3</a>
+            <span class="pagina-ellipsis">…</span>
+            <a class="pagina-btn" href="#">10</a>
+            <button class="pagina-btn" type="button" aria-label="Página siguiente">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        </nav>
     </section>
 
 </div>
