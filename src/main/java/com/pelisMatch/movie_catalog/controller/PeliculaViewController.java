@@ -1,16 +1,15 @@
 package com.pelisMatch.movie_catalog.controller;
 
+import com.pelisMatch.movie_catalog.model.Pelicula;
 import com.pelisMatch.movie_catalog.service.PeliculaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import com.pelisMatch.movie_catalog.model.Pelicula;
-import jakarta.validation.Valid;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/peliculas")
@@ -23,34 +22,27 @@ public class PeliculaViewController {
     }
 
     @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("peliculas", service.listar());
+    public String listar(@RequestParam(required = false) String q,
+                         @RequestParam(required = false) String genero,
+                         Model model) {
+        model.addAttribute("peliculas", service.buscar(q, genero));
+        model.addAttribute("masValoradas", service.masValoradas(5));
+        model.addAttribute("generos", service.generos());
+        model.addAttribute("q", q);
+        model.addAttribute("generoActual", genero);
         return "peliculas/lista";
     }
-        @GetMapping("/nueva")
-    public String nueva(Model model) {
-        model.addAttribute("pelicula", new Pelicula());
-        return "peliculas/form";
-    }
 
-    @GetMapping("/editar/{id}")
-    public String editar(@PathVariable Long id, Model model) {
-        model.addAttribute("pelicula", service.obtenerPorId(id));
-        return "peliculas/form";
-    }
-
-    @PostMapping("/guardar")
-    public String guardar(@Valid @ModelAttribute Pelicula pelicula, BindingResult result) {
-        if (result.hasErrors()) {
-            return "peliculas/form";
+    @GetMapping("/{id}")
+    public String detalle(@PathVariable Long id, Model model) {
+        Optional<Pelicula> encontrada = service.buscarPorId(id);
+        if (encontrada.isEmpty()) {
+            return "redirect:/peliculas";
         }
-        service.guardar(pelicula);
-        return "redirect:/peliculas";
-    }
-
-    @PostMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id) {
-        service.eliminar(id);
-        return "redirect:/peliculas";
+        Pelicula pelicula = encontrada.get();
+        model.addAttribute("pelicula", pelicula);
+        model.addAttribute("relacionadas", service.relacionadas(pelicula, 4));
+        model.addAttribute("generos", service.generos());
+        return "peliculas/detalle";
     }
 }
