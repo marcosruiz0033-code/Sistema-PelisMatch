@@ -22,6 +22,7 @@ public class UserController {
         List<Serie> destacadas = serieService.listarDestacadas();
         model.addAttribute("seriesDestacadas", destacadas);
         model.addAttribute("seriesAdicionales", serieService.listarAdicionales(destacadas));
+        model.addAttribute("paginaActiva", "inicio");
         return "usuario/Home";
     }
 

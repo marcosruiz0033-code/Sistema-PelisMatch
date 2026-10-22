@@ -22,9 +22,9 @@
         </a>
 
         <nav class="main-nav">
-            <a class="nav-item-custom active" th:href="@{/}">Inicio</a>
-            <a class="nav-item-custom" th:href="@{/peliculas}">Películas</a>
-            <a class="nav-item-custom" th:href="@{/series}">Series</a>
+            <a class="nav-item-custom" th:classappend="${paginaActiva == 'inicio'} ? 'active' : ''" th:href="@{/}">Inicio</a>
+            <a class="nav-item-custom" th:classappend="${paginaActiva == 'peliculas'} ? 'active' : ''" th:href="@{/peliculas}">Películas</a>
+            <a class="nav-item-custom" th:classappend="${paginaActiva == 'series'} ? 'active' : ''" th:href="@{/series}">Series</a>
         </nav>
 
         <div class="header-right">

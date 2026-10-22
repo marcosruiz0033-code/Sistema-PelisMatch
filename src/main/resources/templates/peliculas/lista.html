@@ -1,80 +1,44 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{Fragments/UsuarioLayout :: base(~{::contenidoUsuario})}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PelisMatch - Películas</title>
-   <link rel="stylesheet" th:href="@{/CSS/peliculas.css}">
+    <title>Películas — PeliMatch</title>
 </head>
 <body>
+<div th:fragment="contenidoUsuario">
 
-<header class="nav">
-    <a class="logo" th:href="@{/peliculas}"><span class="logo-mark"></span>Pelis<b>Match</b></a>
-    <nav>
-        <a th:href="@{/peliculas}" class="active">Películas</a>
-        <a th:href="@{/peliculas/nueva}">Agregar película</a>
-    </nav>
-</header>
+    <h1 class="pagina-titulo">Películas</h1>
 
-<main>
-    <!-- Destacada: la primera película de la lista -->
-    <section class="hero"
-             th:if="${peliculas != null and !#lists.isEmpty(peliculas)}"
-             th:with="d=${peliculas[0]}"
-             th:style="|--hue: ${d.id * 47 % 360}|">
-        <div class="hero-info">
-            <h1 th:text="${d.titulo}">Título</h1>
-            <p class="meta">
-                <span class="badge" th:text="${d.genero}">Género</span>
-                <span th:text="${d.anio}">2025</span>
-                <span th:text="${d.director}">Director</span>
-            </p>
-            <p class="desc" th:text="${d.descripcion}">Descripción</p>
-            <div class="actions">
-                <a class="btn btn-primary" href="#todas">▶ Ver ahora</a>
-                <a class="btn" href="#">＋ Mis favoritos</a>
+    <div class="grid-tarjetas" th:if="${!peliculas.isEmpty()}">
+        <article class="tarjeta" th:each="p : ${peliculas}">
+            <div class="poster-placeholder">
+                <i class="bi bi-film"></i>
+            </div>
+            <div class="card-body">
+                <p class="titulo" th:text="${p.titulo}">Título</p>
+                <p class="meta">
+                    <span th:text="${p.genero}">Género</span> ·
+                    <span th:text="${p.anio}">2025</span>
+                </p>
+                <p class="meta" th:text="${p.director}">Director</p>
+            </div>
+        </article>
+    </div>
+
+    <section class="seccion" th:if="${peliculas.isEmpty()}">
+        <div class="grid-tarjetas">
+            <div class="tarjeta">
+                <div class="poster-placeholder">
+                    <i class="bi bi-film"></i>
+                </div>
+                <div class="card-body">
+                    <p class="titulo">Sin películas</p>
+                    <p class="meta">Agrega películas desde el panel admin</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="empty" th:if="${peliculas.isEmpty()}">
-        <h2>Aún no hay películas</h2>
-        <p>Agrega la primera para armar tu catálogo.</p>
-        <a class="btn btn-primary" th:href="@{/peliculas/nueva}">Agregar película</a>
-    </section>
-
-    <!-- Top con números grandes -->
-    <section class="row" th:if="${!peliculas.isEmpty()}">
-        <h2>Top películas del día</h2>
-        <div class="top">
-            <article class="top-item" th:each="p, st : ${peliculas}" th:if="${st.index < 8}">
-                <span class="rank" th:text="${st.count}">1</span>
-                <div class="poster" th:style="|--hue: ${p.id * 47 % 360}|">
-                    <span th:text="${p.titulo}">Título</span>
-                </div>
-            </article>
-        </div>
-    </section>
-
-    <!-- Todas -->
-    <section class="row" id="todas" th:if="${!peliculas.isEmpty()}">
-        <div class="row-head">
-            <h2>Películas</h2>
-            <a class="btn btn-primary" th:href="@{/peliculas/nueva}">＋ Nueva película</a>
-        </div>
-        <div class="grid">
-            <article class="card" th:each="p : ${peliculas}">
-                <div class="poster" th:style="|--hue: ${p.id * 47 % 360}|">
-                    <span th:text="${p.titulo}">Título</span>
-                </div>
-                <div class="card-body">
-                    <h3 th:text="${p.titulo}">Título</h3>
-                    <p class="sub"><span th:text="${p.genero}">Género</span> · <span th:text="${p.anio}">2025</span></p>
-                </div>
-            </article>
-        </div>
-    </section>
-</main>
-
+</div>
 </body>
 </html>

@@ -17,6 +17,7 @@ public class PeliculaViewController {
     @GetMapping("/peliculas")
     public String listar(Model model) {
         model.addAttribute("peliculas", service.listar());
+        model.addAttribute("paginaActiva", "peliculas");
         return "peliculas/lista";
     }
 }

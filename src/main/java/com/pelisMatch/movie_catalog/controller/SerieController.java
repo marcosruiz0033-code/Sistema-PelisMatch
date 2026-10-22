@@ -20,6 +20,7 @@ public class SerieController {
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("series", serieService.listarTodas());
+        model.addAttribute("paginaActiva", "series");
         return "usuario/Series";
     }
 
@@ -28,6 +29,7 @@ public class SerieController {
         return serieService.buscarPorId(id)
                 .map(serie -> {
                     model.addAttribute("serie", serie);
+                    model.addAttribute("paginaActiva", "series");
                     return "usuario/SerieDetalle";
                 })
                 .orElse("redirect:/series");
