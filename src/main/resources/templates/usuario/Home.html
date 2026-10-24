@@ -83,8 +83,8 @@
     <!-- ===== Más series ===== -->
     <section class="seccion" th:if="${!seriesAdicionales.isEmpty()}">
         <div th:replace="~{Fragments/Secciones :: cabecera('Más series', '/series')}"></div>
-        <div class="grid-tarjetas">
-            <article class="tarjeta" th:each="s : ${seriesAdicionales}" style="cursor:pointer" th:onclick="'window.location.href=\'' + @{/series/{id}(id=${s.idSerie})} + '\''">
+        <div class="grid-tarjetas mas-series">
+            <article class="tarjeta" th:each="s, iterStat : ${seriesAdicionales}" th:if="${iterStat.index < 12}" style="cursor:pointer" th:onclick="'window.location.href=\'' + @{/series/{id}(id=${s.idSerie})} + '\''">
                 <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
                      th:src="${s.imagen}" th:alt="${s.titulo}">
                 <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
