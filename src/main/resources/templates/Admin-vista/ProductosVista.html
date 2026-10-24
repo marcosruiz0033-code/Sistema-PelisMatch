@@ -88,10 +88,10 @@
                     <tr>
                         <th class="ps-4">ID</th>
                         <th>Título</th>
-                        <th>Género</th>
-                        <th>Director</th>
-                        <th>Año</th>
-                        <th>Descripción</th>
+                            <th>Categoría</th>
+                            <th>Director</th>
+                            <th>Año</th>
+                            <th>Sinopsis</th>
                         <th class="text-center pe-4">Acciones</th>
                     </tr>
                     </thead>
@@ -131,8 +131,8 @@
 
                         <td>
                         <span class="badge rounded-pill text-bg-primary"
-                              th:text="${p.genero}">
-                            Género
+                              th:text="${p.categoria != null ? p.categoria.nombre : ''}">
+                            Categoría
                         </span>
                         </td>
 
@@ -145,11 +145,11 @@
                         </td>
 
                         <td>
-                        <span th:text="${p.descripcion}"
+                        <span th:text="${p.sinopsis}"
                               class="d-inline-block text-truncate"
                               style="max-width: 220px;"
-                              th:title="${p.descripcion}">
-                            Descripción
+                              th:title="${p.sinopsis}">
+                            Sinopsis
                         </span>
                         </td>
 

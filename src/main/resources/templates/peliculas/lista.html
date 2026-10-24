@@ -10,7 +10,8 @@
     <!-- ===== 1. Hero destacado (sin carrusel) ===== -->
     <section class="banner hero-destacado" th:if="${!peliculas.isEmpty()}" th:with="p=${peliculas[0]}">
         <div class="banner-slide">
-            <div class="banner-poster banner-poster-placeholder">
+            <img class="banner-poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
+            <div class="banner-poster banner-poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}">
                 <i class="bi bi-film"></i>
             </div>
             <div class="banner-velo"></div>
@@ -19,14 +20,32 @@
                     <span class="banner-badge">Destacado</span>
                     <h1 class="banner-titulo" th:text="${p.titulo}">Título</h1>
                     <p class="banner-meta">
-                        <span th:text="${p.genero}">Género</span> ·
+                        <span th:text="${p.categoria != null ? p.categoria.nombre : ''}">Categoría</span> ·
                         <span th:text="${p.anio}">2025</span> ·
                         <span th:text="${p.director}">Director</span>
                     </p>
-                    <p class="banner-sinopsis" th:text="${p.descripcion}">Descripción</p>
-                    <a class="btn-custom btn-custom-primary banner-boton" href="#catalogo">
-                        <i class="bi bi-collection-play"></i> Ver catálogo
-                    </a>
+                    <p class="banner-sinopsis" th:text="${p.sinopsis}">Sinopsis</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn-custom btn-custom-primary banner-boton" th:if="${p.urlReproduccion != null and !p.urlReproduccion.isEmpty()}" th:attr="data-url=${p.urlReproduccion},data-titulo=${p.titulo}" onclick="abrirReproductorGlobal(this)">
+                            <i class="bi bi-play-fill"></i> Ver
+                        </button>
+                        <button class="btn-custom btn-custom-secondary banner-boton" th:if="${p.urlTrailer != null and !p.urlTrailer.isEmpty()}" th:attr="data-trailer=${p.urlTrailer},data-titulo=${'Tráiler - ' + p.titulo}" onclick="abrirTrailerGlobal(this)">
+                            <i class="bi bi-youtube"></i> Ver tráiler
+                        </button>
+                        <a class="btn-custom btn-custom-secondary banner-boton" href="#catalogo">
+                            <i class="bi bi-collection-play"></i> Ver catálogo
+                        </a>
+                    </div>
+                    <div class="mt-2" th:if="${p.urlNetflix != null or p.urlPrimeVideo != null or p.urlDisneyPlus != null or p.urlMax != null or p.urlAppleTv != null}">
+                        <p class="mb-1 text-secondary">Disponible en:</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a class="btn btn-sm btn-outline-light" th:if="${p.urlNetflix != null and !p.urlNetflix.isEmpty()}" th:href="${p.urlNetflix}" target="_blank" rel="noopener noreferrer">Netflix</a>
+                            <a class="btn btn-sm btn-outline-light" th:if="${p.urlPrimeVideo != null and !p.urlPrimeVideo.isEmpty()}" th:href="${p.urlPrimeVideo}" target="_blank" rel="noopener noreferrer">Prime Video</a>
+                            <a class="btn btn-sm btn-outline-light" th:if="${p.urlDisneyPlus != null and !p.urlDisneyPlus.isEmpty()}" th:href="${p.urlDisneyPlus}" target="_blank" rel="noopener noreferrer">Disney+</a>
+                            <a class="btn btn-sm btn-outline-light" th:if="${p.urlMax != null and !p.urlMax.isEmpty()}" th:href="${p.urlMax}" target="_blank" rel="noopener noreferrer">Max</a>
+                            <a class="btn btn-sm btn-outline-light" th:if="${p.urlAppleTv != null and !p.urlAppleTv.isEmpty()}" th:href="${p.urlAppleTv}" target="_blank" rel="noopener noreferrer">Apple TV+</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,14 +88,19 @@
                  th:with="p=${i < #lists.size(peliculas) ? peliculas[i] : null}">
                 <span class="top-rank" th:text="${i + 1}">1</span>
 
-                <article class="tarjeta" th:if="${p != null}">
-                    <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                <article class="tarjeta" th:if="${p != null}" th:attr="data-url=${p.urlReproduccion},data-titulo=${p.titulo},data-sinopsis=${p.sinopsis},data-categoria=${p.categoria != null ? p.categoria.nombre : ''},data-anio=${p.anio},data-director=${p.director},data-trailer=${p.urlTrailer},data-netflix=${p.urlNetflix},data-prime=${p.urlPrimeVideo},data-disney=${p.urlDisneyPlus},data-max=${p.urlMax},data-apple=${p.urlAppleTv}" style="cursor:pointer" onclick="abrirDetallePelicula(this)">
+                    <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
+                    <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
                     <div class="card-body">
                         <p class="titulo" th:text="${p.titulo}">Título</p>
                         <p class="meta">
-                            <span th:text="${p.genero}">Género</span> ·
-                            <span th:text="${p.anio}">2025</span>
+                            <span th:text="${p.anio}">2025</span> ·
+                            <span th:text="${p.categoria != null ? p.categoria.nombre : ''}">Categoría</span>
                         </p>
+                        <div class="d-flex gap-2 mt-2 flex-wrap">
+                            <button type="button" class="btn btn-sm btn-light" onclick="event.stopPropagation(); abrirDetallePelicula(this.closest('.tarjeta'))"><i class="bi bi-info-circle"></i> Ver detalles</button>
+                            <button type="button" class="btn btn-sm btn-outline-light" th:if="${p.urlTrailer != null and !p.urlTrailer.isEmpty()}" th:attr="data-trailer=${p.urlTrailer},data-titulo=${'Tráiler - ' + p.titulo}" onclick="event.stopPropagation(); abrirTrailerGlobal(this)"><i class="bi bi-youtube"></i> Tráiler</button>
+                        </div>
                     </div>
                 </article>
 
@@ -101,15 +125,15 @@
 
             <form class="catalogo-filtros" action="#" method="get">
                 <div class="filtro-campo">
-                    <label for="filtroGenero">Género</label>
-                    <select id="filtroGenero" name="genero">
+                    <label for="filtroGenero">Categoría</label>
+                    <select id="filtroGenero" name="categoria">
                         <option value="">Todos</option>
-                        <option value="Accion">Acción</option>
+                        <option value="Acción">Acción</option>
                         <option value="Comedia">Comedia</option>
                         <option value="Drama">Drama</option>
                         <option value="Terror">Terror</option>
-                        <option value="Ciencia-ficcion">Ciencia ficción</option>
-                        <option value="Animacion">Animación</option>
+                        <option value="Ciencia ficción">Ciencia ficción</option>
+                        <option value="Animación">Animación</option>
                         <option value="Suspenso">Suspenso</option>
                         <option value="Aventura">Aventura</option>
                     </select>
@@ -134,15 +158,19 @@
         <div class="grid-tarjetas catalogo-grid">
             <th:block th:each="i : ${#numbers.sequence(0, 13)}"
                       th:with="p=${i < #lists.size(peliculas) ? peliculas[i] : null}">
-                <article class="tarjeta" th:if="${p != null}">
-                    <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                <article class="tarjeta" th:if="${p != null}" style="cursor:pointer" th:onclick="'window.location.href=\'' + @{/peliculas/{id}(id=${p.id})} + '\''">
+                    <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
+                    <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
                     <div class="card-body">
                         <p class="titulo" th:text="${p.titulo}">Título</p>
                         <p class="meta">
-                            <span th:text="${p.genero}">Género</span> ·
-                            <span th:text="${p.anio}">2025</span>
+                            <span th:text="${p.anio}">2025</span> ·
+                            <span th:text="${p.categoria != null ? p.categoria.nombre : ''}">Categoría</span>
                         </p>
-                        <p class="meta" th:text="${p.director}">Director</p>
+                        <div class="d-flex gap-2 mt-2 flex-wrap">
+                            <a class="btn btn-sm btn-light" th:href="@{/peliculas/{id}(id=${p.id})}" onclick="event.stopPropagation();"><i class="bi bi-info-circle"></i> Ver detalles</a>
+                            <button type="button" class="btn btn-sm btn-outline-light" th:if="${p.urlTrailer != null and !p.urlTrailer.isEmpty()}" th:attr="data-trailer=${p.urlTrailer},data-titulo=${'Tráiler - ' + p.titulo}" onclick="event.stopPropagation(); abrirTrailerGlobal(this)"><i class="bi bi-youtube"></i> Tráiler</button>
+                        </div>
                     </div>
                 </article>
 
@@ -171,6 +199,72 @@
             </button>
         </nav>
     </section>
+
+    <!-- Modal Detalle Película -->
+    <div class="modal fade" id="modalDetallePelicula" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="modalDetallePeliculaTitulo"></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-1"><strong>Categoría:</strong> <span id="modalDetallePeliculaCat"></span> · <strong>Año:</strong> <span id="modalDetallePeliculaAnio"></span> · <strong>Director:</strong> <span id="modalDetallePeliculaDir"></span></p>
+                    <p class="text-secondary" id="modalDetallePeliculaSinopsis"></p>
+                    <div class="mb-2">
+                        <button class="btn btn-light me-2" id="btnVerPeliculaDetalle"><i class="bi bi-play-fill"></i> Ver película</button>
+                        <button class="btn btn-outline-light" id="btnVerTrailerDetalle"><i class="bi bi-youtube"></i> Ver tráiler</button>
+                    </div>
+                    <div>
+                        <p class="mb-1 text-secondary">Disponible en:</p>
+                        <div class="d-flex flex-wrap gap-2" id="modalDetallePeliculaPlataformas"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function abrirDetallePelicula(el) {
+            const titulo = el.getAttribute('data-titulo') || '';
+            const sinopsis = el.getAttribute('data-sinopsis') || '';
+            const categoria = el.getAttribute('data-categoria') || '';
+            const anio = el.getAttribute('data-anio') || '';
+            const director = el.getAttribute('data-director') || '';
+            const urlRepro = el.getAttribute('data-url') || '';
+            const trailer = el.getAttribute('data-trailer') || '';
+            const netflix = el.getAttribute('data-netflix') || '';
+            const prime = el.getAttribute('data-prime') || '';
+            const disney = el.getAttribute('data-disney') || '';
+            const maxv = el.getAttribute('data-max') || '';
+            const apple = el.getAttribute('data-apple') || '';
+
+            document.getElementById('modalDetallePeliculaTitulo').textContent = titulo;
+            document.getElementById('modalDetallePeliculaCat').textContent = categoria;
+            document.getElementById('modalDetallePeliculaAnio').textContent = anio;
+            document.getElementById('modalDetallePeliculaDir').textContent = director;
+            document.getElementById('modalDetallePeliculaSinopsis').textContent = sinopsis;
+
+            const btnVer = document.getElementById('btnVerPeliculaDetalle');
+            btnVer.style.display = urlRepro ? 'inline-block' : 'none';
+            btnVer.onclick = function(){ const tmp=document.createElement('button'); tmp.setAttribute('data-url',urlRepro); tmp.setAttribute('data-titulo',titulo); abrirReproductorGlobal(tmp); };
+
+            const btnTr = document.getElementById('btnVerTrailerDetalle');
+            btnTr.style.display = trailer ? 'inline-block' : 'none';
+            btnTr.onclick = function(){ const tmp=document.createElement('button'); tmp.setAttribute('data-trailer',trailer); tmp.setAttribute('data-titulo','Tráiler - '+titulo); abrirTrailerGlobal(tmp); };
+
+            const plat = document.getElementById('modalDetallePeliculaPlataformas');
+            plat.innerHTML = '';
+            if (netflix) plat.innerHTML += '<a class="btn btn-sm btn-outline-light" href="'+netflix+'" target="_blank" rel="noopener noreferrer">Netflix</a>';
+            if (prime) plat.innerHTML += '<a class="btn btn-sm btn-outline-light" href="'+prime+'" target="_blank" rel="noopener noreferrer">Prime Video</a>';
+            if (disney) plat.innerHTML += '<a class="btn btn-sm btn-outline-light" href="'+disney+'" target="_blank" rel="noopener noreferrer">Disney+</a>';
+            if (maxv) plat.innerHTML += '<a class="btn btn-sm btn-outline-light" href="'+maxv+'" target="_blank" rel="noopener noreferrer">Max</a>';
+            if (apple) plat.innerHTML += '<a class="btn btn-sm btn-outline-light" href="'+apple+'" target="_blank" rel="noopener noreferrer">Apple TV+</a>';
+            if (plat.innerHTML === '') plat.innerHTML = '<span class="text-secondary">No hay plataformas disponibles.</span>';
+
+            new bootstrap.Modal(document.getElementById('modalDetallePelicula')).show();
+        }
+    </script>
 
 </div>
 </body>

@@ -23,16 +23,21 @@
                     <h1 class="banner-titulo" th:text="${s.titulo}">Título</h1>
                     <p class="banner-meta">
                         <span th:text="${s.anio}">2025</span> ·
-                        <span th:text="${s.categoria.nombre}">Categoría</span>
+                        <span th:text="${s.categoria != null ? s.categoria.nombre : ''}">Categoría</span>
                         <span th:if="${s.temporadas != null}">
                             · <span th:text="${s.temporadas}">1</span> temporadas
                         </span>
                     </p>
                     <p class="banner-sinopsis" th:text="${s.sinopsis}">Sinopsis</p>
-                    <a class="btn-custom btn-custom-primary banner-boton"
-                       th:href="@{/series/{id}(id=${s.idSerie})}">
-                        <i class="bi bi-info-circle"></i> Ver detalles
-                    </a>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a class="btn-custom btn-custom-primary banner-boton"
+                           th:href="@{/series/{id}(id=${s.idSerie})}">
+                            <i class="bi bi-info-circle"></i> Ver detalles
+                        </a>
+                        <button class="btn-custom btn-custom-secondary banner-boton" th:if="${s.urlTrailer != null and !s.urlTrailer.isEmpty()}" th:attr="data-trailer=${s.urlTrailer},data-titulo=${'Tráiler - ' + s.titulo}" onclick="abrirTrailerGlobal(this)">
+                            <i class="bi bi-youtube"></i> Ver tráiler
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -75,7 +80,7 @@
                  th:with="s=${i < #lists.size(series) ? series[i] : null}">
                 <span class="top-rank" th:text="${i + 1}">1</span>
 
-                <a class="tarjeta" th:if="${s != null}" th:href="@{/series/{id}(id=${s.idSerie})}">
+                <article class="tarjeta" th:if="${s != null}" style="cursor:pointer" th:onclick="'window.location.href=\'' + @{/series/{id}(id=${s.idSerie})} + '\''">
                     <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
                          th:src="${s.imagen}" th:alt="${s.titulo}">
                     <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
@@ -85,10 +90,14 @@
                         <p class="titulo" th:text="${s.titulo}">Título</p>
                         <p class="meta">
                             <span th:text="${s.anio}">2025</span> ·
-                            <span th:text="${s.categoria.nombre}">Categoría</span>
+                            <span th:text="${s.categoria != null ? s.categoria.nombre : ''}">Categoría</span>
                         </p>
+                        <div class="d-flex gap-2 mt-2">
+                            <a class="btn btn-sm btn-light" th:href="@{/series/{id}(id=${s.idSerie})}" onclick="event.stopPropagation();"><i class="bi bi-info-circle"></i> Ver detalles</a>
+                            <button type="button" class="btn btn-sm btn-outline-light" th:if="${s.urlTrailer != null and !s.urlTrailer.isEmpty()}" th:attr="data-trailer=${s.urlTrailer},data-titulo=${'Tráiler - ' + s.titulo}" onclick="event.stopPropagation(); abrirTrailerGlobal(this)"><i class="bi bi-youtube"></i> Tráiler</button>
+                        </div>
                     </div>
-                </a>
+                </article>
 
                 <div class="tarjeta tarjeta-vacia" th:if="${s == null}">
                     <div class="poster-placeholder"><i class="bi bi-tv"></i></div>
@@ -144,7 +153,7 @@
         <div class="grid-tarjetas catalogo-grid">
             <th:block th:each="i : ${#numbers.sequence(0, 13)}"
                       th:with="s=${i < #lists.size(series) ? series[i] : null}">
-                <a class="tarjeta" th:if="${s != null}" th:href="@{/series/{id}(id=${s.idSerie})}">
+                <article class="tarjeta" th:if="${s != null}" style="cursor:pointer" th:onclick="'window.location.href=\'' + @{/series/{id}(id=${s.idSerie})} + '\''">
                     <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
                          th:src="${s.imagen}" th:alt="${s.titulo}">
                     <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
@@ -154,10 +163,14 @@
                         <p class="titulo" th:text="${s.titulo}">Título</p>
                         <p class="meta">
                             <span th:text="${s.anio}">2025</span> ·
-                            <span th:text="${s.categoria.nombre}">Categoría</span>
+                            <span th:text="${s.categoria != null ? s.categoria.nombre : ''}">Categoría</span>
                         </p>
+                        <div class="d-flex gap-2 mt-2">
+                            <a class="btn btn-sm btn-light" th:href="@{/series/{id}(id=${s.idSerie})}" onclick="event.stopPropagation();"><i class="bi bi-info-circle"></i> Ver detalles</a>
+                            <button type="button" class="btn btn-sm btn-outline-light" th:if="${s.urlTrailer != null and !s.urlTrailer.isEmpty()}" th:attr="data-trailer=${s.urlTrailer},data-titulo=${'Tráiler - ' + s.titulo}" onclick="event.stopPropagation(); abrirTrailerGlobal(this)"><i class="bi bi-youtube"></i> Tráiler</button>
+                        </div>
                     </div>
-                </a>
+                </article>
 
                 <div class="tarjeta tarjeta-vacia" th:if="${s == null}">
                     <div class="poster-placeholder"><i class="bi bi-tv"></i></div>

@@ -33,6 +33,12 @@
                 <span class="estado-badge" th:text="${serie.estado}">Estado</span>
             </p>
 
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <button class="btn btn-outline-light" th:if="${serie.urlTrailer != null and !serie.urlTrailer.isEmpty()}" th:attr="data-trailer=${serie.urlTrailer},data-titulo=${'Tráiler - ' + serie.titulo}" onclick="abrirTrailerGlobal(this)">
+                    <i class="bi bi-youtube"></i> Ver tráiler
+                </button>
+            </div>
+
             <h2 class="seccion-titulo detalle-subtitulo">Sinopsis</h2>
             <p class="detalle-sinopsis" th:text="${serie.sinopsis}">Sinopsis</p>
 

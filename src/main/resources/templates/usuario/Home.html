@@ -84,7 +84,7 @@
     <section class="seccion" th:if="${!seriesAdicionales.isEmpty()}">
         <div th:replace="~{Fragments/Secciones :: cabecera('Más series', '/series')}"></div>
         <div class="grid-tarjetas">
-            <a class="tarjeta" th:each="s : ${seriesAdicionales}" th:href="@{/series/{id}(id=${s.idSerie})}">
+            <article class="tarjeta" th:each="s : ${seriesAdicionales}" style="cursor:pointer" th:onclick="'window.location.href=\'' + @{/series/{id}(id=${s.idSerie})} + '\''">
                 <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
                      th:src="${s.imagen}" th:alt="${s.titulo}">
                 <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
@@ -94,10 +94,14 @@
                     <p class="titulo" th:text="${s.titulo}">Título</p>
                     <p class="meta">
                         <span th:text="${s.anio}">2025</span> ·
-                        <span th:text="${s.categoria.nombre}">Categoría</span>
+                        <span th:text="${s.categoria != null ? s.categoria.nombre : ''}">Categoría</span>
                     </p>
+                    <div class="d-flex gap-2 mt-2">
+                        <a class="btn btn-sm btn-light" th:href="@{/series/{id}(id=${s.idSerie})}" onclick="event.stopPropagation();"><i class="bi bi-info-circle"></i> Ver detalles</a>
+                        <button type="button" class="btn btn-sm btn-outline-light" th:if="${s.urlTrailer != null and !s.urlTrailer.isEmpty()}" th:attr="data-trailer=${s.urlTrailer},data-titulo=${'Tráiler - ' + s.titulo}" onclick="event.stopPropagation(); abrirTrailerGlobal(this)"><i class="bi bi-youtube"></i> Tráiler</button>
+                    </div>
                 </div>
-            </a>
+            </article>
         </div>
     </section>
 
@@ -105,16 +109,24 @@
     <section class="seccion">
         <div th:replace="~{Fragments/Secciones :: cabecera('Lo más reciente', '/peliculas')}"></div>
         <div class="grid-tarjetas">
-            <a class="tarjeta" th:each="p : ${peliculasRecientes}" th:href="@{/peliculas}">
-                <div class="poster-placeholder"><i class="bi bi-film"></i></div>
-                <div class="card-body">
-                    <p class="titulo" th:text="${p.titulo}">Título</p>
-                    <p class="meta">
-                        <span th:text="${p.genero}">Género</span> ·
-                        <span th:text="${p.anio}">2025</span>
-                    </p>
-                </div>
-            </a>
+            <th:block th:each="p : ${peliculasRecientes}">
+                <article class="tarjeta" th:if="${p != null}" style="cursor:pointer" th:onclick="'window.location.href=\'' + @{/peliculas/{id}(id=${p.id})} + '\''">
+                    <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
+                    <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
+                    <div class="card-body">
+                        <p class="titulo" th:text="${p.titulo}">Título</p>
+                        <p class="meta">
+                            <span th:text="${p.anio}">2025</span> ·
+                            <span th:text="${p.categoria != null ? p.categoria.nombre : ''}">Categoría</span>
+                        </p>
+                        <div class="d-flex gap-2 mt-2 flex-wrap">
+                            <a class="btn btn-sm btn-light" th:href="@{/peliculas/{id}(id=${p.id})}" onclick="event.stopPropagation();"><i class="bi bi-info-circle"></i> Ver detalles</a>
+                            <button type="button" class="btn btn-sm btn-outline-light" th:if="${p.urlTrailer != null and !p.urlTrailer.isEmpty()}" th:attr="data-trailer=${p.urlTrailer},data-titulo=${'Tráiler - ' + p.titulo}" onclick="event.stopPropagation(); abrirTrailerGlobal(this)"><i class="bi bi-youtube"></i> Tráiler</button>
+                        </div>
+                    </div>
+                </article>
+            </th:block>
+            <div th:if="${peliculasRecientes == null or #lists.isEmpty(peliculasRecientes)}" class="text-secondary">Aún no hay películas recientes.</div>
         </div>
     </section>
 
@@ -122,16 +134,24 @@
     <section class="seccion">
         <div th:replace="~{Fragments/Secciones :: cabecera('Películas actualizadas', '/peliculas')}"></div>
         <div class="grid-tarjetas">
-            <a class="tarjeta" th:each="p : ${peliculasActualizadas}" th:href="@{/peliculas}">
-                <div class="poster-placeholder"><i class="bi bi-film"></i></div>
-                <div class="card-body">
-                    <p class="titulo" th:text="${p.titulo}">Título</p>
-                    <p class="meta">
-                        <span th:text="${p.genero}">Género</span> ·
-                        <span th:text="${p.anio}">2025</span>
-                    </p>
-                </div>
-            </a>
+            <th:block th:each="p : ${peliculasActualizadas}">
+                <article class="tarjeta" th:if="${p != null}" style="cursor:pointer" th:onclick="'window.location.href=\'' + @{/peliculas/{id}(id=${p.id})} + '\''">
+                    <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
+                    <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
+                    <div class="card-body">
+                        <p class="titulo" th:text="${p.titulo}">Título</p>
+                        <p class="meta">
+                            <span th:text="${p.anio}">2025</span> ·
+                            <span th:text="${p.categoria != null ? p.categoria.nombre : ''}">Categoría</span>
+                        </p>
+                        <div class="d-flex gap-2 mt-2 flex-wrap">
+                            <a class="btn btn-sm btn-light" th:href="@{/peliculas/{id}(id=${p.id})}" onclick="event.stopPropagation();"><i class="bi bi-info-circle"></i> Ver detalles</a>
+                            <button type="button" class="btn btn-sm btn-outline-light" th:if="${p.urlTrailer != null and !p.urlTrailer.isEmpty()}" th:attr="data-trailer=${p.urlTrailer},data-titulo=${'Tráiler - ' + p.titulo}" onclick="event.stopPropagation(); abrirTrailerGlobal(this)"><i class="bi bi-youtube"></i> Tráiler</button>
+                        </div>
+                    </div>
+                </article>
+            </th:block>
+            <div th:if="${peliculasActualizadas == null or #lists.isEmpty(peliculasActualizadas)}" class="text-secondary">Aún no hay películas actualizadas.</div>
         </div>
     </section>
 
@@ -139,16 +159,24 @@
     <section class="seccion">
         <div th:replace="~{Fragments/Secciones :: cabecera('Estrenos top', '/peliculas')}"></div>
         <div class="grid-tarjetas">
-            <a class="tarjeta" th:each="p : ${estrenosTop}" th:href="@{/peliculas}">
-                <div class="poster-placeholder"><i class="bi bi-film"></i></div>
-                <div class="card-body">
-                    <p class="titulo" th:text="${p.titulo}">Título</p>
-                    <p class="meta">
-                        <span th:text="${p.genero}">Género</span> ·
-                        <span th:text="${p.anio}">2025</span>
-                    </p>
-                </div>
-            </a>
+            <th:block th:each="p : ${estrenosTop}">
+                <article class="tarjeta" th:if="${p != null}" style="cursor:pointer" th:onclick="'window.location.href=\'' + @{/peliculas/{id}(id=${p.id})} + '\''">
+                    <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
+                    <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
+                    <div class="card-body">
+                        <p class="titulo" th:text="${p.titulo}">Título</p>
+                        <p class="meta">
+                            <span th:text="${p.anio}">2025</span> ·
+                            <span th:text="${p.categoria != null ? p.categoria.nombre : ''}">Categoría</span>
+                        </p>
+                        <div class="d-flex gap-2 mt-2 flex-wrap">
+                            <a class="btn btn-sm btn-light" th:href="@{/peliculas/{id}(id=${p.id})}" onclick="event.stopPropagation();"><i class="bi bi-info-circle"></i> Ver detalles</a>
+                            <button type="button" class="btn btn-sm btn-outline-light" th:if="${p.urlTrailer != null and !p.urlTrailer.isEmpty()}" th:attr="data-trailer=${p.urlTrailer},data-titulo=${'Tráiler - ' + p.titulo}" onclick="event.stopPropagation(); abrirTrailerGlobal(this)"><i class="bi bi-youtube"></i> Tráiler</button>
+                        </div>
+                    </div>
+                </article>
+            </th:block>
+            <div th:if="${estrenosTop == null or #lists.isEmpty(estrenosTop)}" class="text-secondary">Aún no hay estrenos.</div>
         </div>
     </section>
 
@@ -166,6 +194,8 @@
             <a th:href="@{/categorias/Aventura}" class="categoria-chip">Aventura</a>
         </div>
     </section>
+
+
 
 </div>
 </body>

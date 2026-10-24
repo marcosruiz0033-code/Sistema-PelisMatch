@@ -31,23 +31,28 @@
         <section class="seccion search-section" th:if="${!peliculas.isEmpty()}">
             <h2 class="seccion-titulo">Películas</h2>
             <div class="grid-tarjetas">
-                <a class="tarjeta" th:each="p : ${peliculas}" th:href="@{/peliculas}">
-                    <div class="poster-placeholder"><i class="bi bi-film"></i></div>
+                <article class="tarjeta" th:each="p : ${peliculas}" th:if="${p != null}" style="cursor:pointer" th:onclick="'window.location.href=\'' + @{/peliculas/{id}(id=${p.id})} + '\''">
+                    <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
+                    <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
                     <div class="card-body">
                         <p class="titulo" th:text="${p.titulo}">Título</p>
                         <p class="meta">
-                            <span th:text="${p.genero}">Género</span> ·
-                            <span th:text="${p.anio}">2025</span>
+                            <span th:text="${p.anio}">2025</span> ·
+                            <span th:text="${p.categoria != null ? p.categoria.nombre : ''}">Categoría</span>
                         </p>
+                        <div class="d-flex gap-2 mt-2 flex-wrap">
+                            <a class="btn btn-sm btn-light" th:href="@{/peliculas/{id}(id=${p.id})}" onclick="event.stopPropagation();"><i class="bi bi-info-circle"></i> Ver detalles</a>
+                            <button type="button" class="btn btn-sm btn-outline-light" th:if="${p.urlTrailer != null and !p.urlTrailer.isEmpty()}" th:attr="data-trailer=${p.urlTrailer},data-titulo=${'Tráiler - ' + p.titulo}" onclick="event.stopPropagation(); abrirTrailerGlobal(this)"><i class="bi bi-youtube"></i> Tráiler</button>
+                        </div>
                     </div>
-                </a>
+                </article>
             </div>
         </section>
 
         <section class="seccion search-section" th:if="${!series.isEmpty()}">
             <h2 class="seccion-titulo">Series</h2>
             <div class="grid-tarjetas">
-                <a class="tarjeta" th:each="s : ${series}" th:href="@{/series/{id}(id=${s.idSerie})}">
+                <article class="tarjeta" th:each="s : ${series}" style="cursor:pointer" th:onclick="'window.location.href=\'' + @{/series/{id}(id=${s.idSerie})} + '\''">
                     <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}"
                          th:src="${s.imagen}" th:alt="${s.titulo}">
                     <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
@@ -57,13 +62,20 @@
                         <p class="titulo" th:text="${s.titulo}">Título</p>
                         <p class="meta">
                             <span th:text="${s.anio}">2025</span> ·
-                            <span th:text="${s.categoria.nombre}">Categoría</span>
+                            <span th:text="${s.categoria != null ? s.categoria.nombre : ''}">Categoría</span>
                         </p>
+                        <div class="d-flex gap-2 mt-2">
+                            <a class="btn btn-sm btn-light" th:href="@{/series/{id}(id=${s.idSerie})}" onclick="event.stopPropagation();"><i class="bi bi-info-circle"></i> Ver detalles</a>
+                            <button type="button" class="btn btn-sm btn-outline-light" th:if="${s.urlTrailer != null and !s.urlTrailer.isEmpty()}" th:attr="data-trailer=${s.urlTrailer},data-titulo=${'Tráiler - ' + s.titulo}" onclick="event.stopPropagation(); abrirTrailerGlobal(this)"><i class="bi bi-youtube"></i> Tráiler</button>
+                        </div>
                     </div>
-                </a>
+                </article>
             </div>
         </section>
     </section>
+
+
+
 </div>
 </body>
 </html>

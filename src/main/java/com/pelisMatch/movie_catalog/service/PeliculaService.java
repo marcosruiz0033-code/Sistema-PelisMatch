@@ -25,7 +25,7 @@ public class PeliculaService {
     }
 
     public List<Pelicula> listarPorGenero(String genero) {
-        return repository.findByGeneroIgnoreCase(genero);
+        return repository.findByCategoriaNombreIgnoreCase(genero);
     }
 
     public List<Pelicula> buscarPorTitulo(String titulo) {

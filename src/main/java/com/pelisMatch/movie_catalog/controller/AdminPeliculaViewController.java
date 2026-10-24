@@ -1,6 +1,7 @@
 package com.pelisMatch.movie_catalog.controller;
 
 import com.pelisMatch.movie_catalog.model.Pelicula;
+import com.pelisMatch.movie_catalog.service.CategoriaService;
 import com.pelisMatch.movie_catalog.service.PeliculaService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminPeliculaViewController {
 
     private final PeliculaService service;
+    private final CategoriaService categoriaService;
 
-    public AdminPeliculaViewController(PeliculaService service) {
+    public AdminPeliculaViewController(PeliculaService service, CategoriaService categoriaService) {
         this.service = service;
+        this.categoriaService = categoriaService;
     }
 
     // Listar películas del administrador
@@ -32,12 +35,14 @@ public class AdminPeliculaViewController {
     @GetMapping("/nueva")
     public String nueva(Model model) {
         model.addAttribute("pelicula", new Pelicula());
+        model.addAttribute("categorias", categoriaService.listarTodas());
         return "peliculas/form";
     }
 
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
         model.addAttribute("pelicula", service.obtenerPorId(id));
+        model.addAttribute("categorias", categoriaService.listarTodas());
         return "peliculas/form";
     }
 
@@ -45,9 +50,11 @@ public class AdminPeliculaViewController {
     @PostMapping("/guardar")
     public String guardar(
             @Valid @ModelAttribute("pelicula") Pelicula pelicula,
-            BindingResult result) {
+            BindingResult result,
+            Model model) {
 
         if (result.hasErrors()) {
+            model.addAttribute("categorias", categoriaService.listarTodas());
             return "peliculas/form";
         }
 

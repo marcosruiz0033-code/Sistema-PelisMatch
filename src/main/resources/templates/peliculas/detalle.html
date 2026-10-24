@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{Fragments/UsuarioLayout :: base(~{::contenidoUsuario})}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pelicula.titulo} + ' — PeliMatch'">Película — PeliMatch</title>
+</head>
+<body>
+<div th:fragment="contenidoUsuario">
+
+    <a th:href="@{/peliculas}" class="volver"><i class="bi bi-arrow-left"></i> Volver al listado</a>
+
+    <div class="detalle-header">
+        <img class="detalle-poster" th:if="${pelicula.imagen != null and !pelicula.imagen.isEmpty()}"
+             th:src="${pelicula.imagen}" th:alt="${pelicula.titulo}">
+        <div class="detalle-poster detalle-poster-placeholder" th:unless="${pelicula.imagen != null and !pelicula.imagen.isEmpty()}">
+            <i class="bi bi-film"></i>
+        </div>
+
+        <div class="detalle-info">
+            <h1 class="detalle-titulo" th:text="${pelicula.titulo}">Título</h1>
+
+            <p class="detalle-meta">
+                <span th:text="${pelicula.anio}">2025</span>
+                <span class="punto">·</span>
+                <span th:text="${pelicula.categoria != null ? pelicula.categoria.nombre : ''}">Categoría</span>
+                <span class="punto" th:if="${pelicula.director != null and !pelicula.director.isEmpty()}">·</span>
+                <span th:if="${pelicula.director != null and !pelicula.director.isEmpty()}" th:text="${pelicula.director}">Director</span>
+                <span class="punto" th:if="${pelicula.duracion != null}">·</span>
+                <span th:if="${pelicula.duracion != null}"><span th:text="${pelicula.duracion}">120</span> min</span>
+            </p>
+
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <button class="btn btn-light" th:if="${pelicula.urlReproduccion != null and !pelicula.urlReproduccion.isEmpty()}" th:attr="data-url=${pelicula.urlReproduccion},data-titulo=${pelicula.titulo}" onclick="abrirReproductorGlobal(this)">
+                    <i class="bi bi-play-fill"></i> Ver película
+                </button>
+                <button class="btn btn-outline-light" th:if="${pelicula.urlTrailer != null and !pelicula.urlTrailer.isEmpty()}" th:attr="data-trailer=${pelicula.urlTrailer},data-titulo=${'Tráiler - ' + pelicula.titulo}" onclick="abrirTrailerGlobal(this)">
+                    <i class="bi bi-youtube"></i> Ver tráiler
+                </button>
+            </div>
+
+            <h2 class="seccion-titulo detalle-subtitulo">Sinopsis</h2>
+            <p class="detalle-sinopsis" th:text="${pelicula.sinopsis}">Sinopsis</p>
+
+            <h2 class="seccion-titulo detalle-subtitulo">Dónde ver</h2>
+            <div class="plataformas">
+                <a class="plataforma-btn" th:if="${pelicula.urlNetflix != null and !pelicula.urlNetflix.isEmpty()}"
+                   th:href="${pelicula.urlNetflix}" target="_blank" rel="noopener noreferrer">
+                    <i class="bi bi-play-circle"></i> Netflix
+                </a>
+                <a class="plataforma-btn" th:if="${pelicula.urlPrimeVideo != null and !pelicula.urlPrimeVideo.isEmpty()}"
+                   th:href="${pelicula.urlPrimeVideo}" target="_blank" rel="noopener noreferrer">
+                    <i class="bi bi-play-circle"></i> Prime Video
+                </a>
+                <a class="plataforma-btn" th:if="${pelicula.urlDisneyPlus != null and !pelicula.urlDisneyPlus.isEmpty()}"
+                   th:href="${pelicula.urlDisneyPlus}" target="_blank" rel="noopener noreferrer">
+                    <i class="bi bi-play-circle"></i> Disney+
+                </a>
+                <a class="plataforma-btn" th:if="${pelicula.urlMax != null and !pelicula.urlMax.isEmpty()}"
+                   th:href="${pelicula.urlMax}" target="_blank" rel="noopener noreferrer">
+                    <i class="bi bi-play-circle"></i> Max
+                </a>
+                <a class="plataforma-btn" th:if="${pelicula.urlAppleTv != null and !pelicula.urlAppleTv.isEmpty()}"
+                   th:href="${pelicula.urlAppleTv}" target="_blank" rel="noopener noreferrer">
+                    <i class="bi bi-play-circle"></i> Apple TV+
+                </a>
+                <p class="sin-plataformas"
+                   th:if="${(pelicula.urlNetflix == null or pelicula.urlNetflix.isEmpty()) and
+                           (pelicula.urlPrimeVideo == null or pelicula.urlPrimeVideo.isEmpty()) and
+                           (pelicula.urlDisneyPlus == null or pelicula.urlDisneyPlus.isEmpty()) and
+                           (pelicula.urlMax == null or pelicula.urlMax.isEmpty()) and
+                           (pelicula.urlAppleTv == null or pelicula.urlAppleTv.isEmpty())}">
+                    Información de disponibilidad pendiente.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

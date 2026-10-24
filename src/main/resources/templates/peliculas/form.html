@@ -121,23 +121,18 @@
         </div>
 
         <div class="campo">
-            <label for="genero">Género</label>
-            <input id="genero"
-                   type="text"
-                   th:field="*{genero}"
-                   required>
-
-            <span class="error"
-                  th:if="${#fields.hasErrors('genero')}"
-                  th:errors="*{genero}"></span>
+            <label for="categoria">Categoría</label>
+            <select id="categoria" th:field="*{categoria}" required>
+                <option value="" disabled>Selecciona una categoría</option>
+                <option th:each="cat : ${categorias}" th:value="${cat.idCategoria}" th:text="${cat.nombre}"></option>
+            </select>
         </div>
 
         <div class="campo">
             <label for="director">Director</label>
             <input id="director"
                    type="text"
-                   th:field="*{director}"
-                   required>
+                   th:field="*{director}">
         </div>
 
         <div class="campo">
@@ -153,14 +148,42 @@
         </div>
 
         <div class="campo">
-            <label for="descripcion">Descripción</label>
-            <textarea id="descripcion"
-                      th:field="*{descripcion}"
+            <label for="duracion">Duración (minutos)</label>
+            <input id="duracion"
+                   type="number"
+                   th:field="*{duracion}">
+        </div>
+
+        <div class="campo">
+            <label for="imagen">URL de imagen</label>
+            <input id="imagen"
+                   type="text"
+                   th:field="*{imagen}">
+        </div>
+
+        <div class="campo">
+            <label for="sinopsis">Sinopsis</label>
+            <textarea id="sinopsis"
+                      th:field="*{sinopsis}"
                       required></textarea>
 
             <span class="error"
-                  th:if="${#fields.hasErrors('descripcion')}"
-                  th:errors="*{descripcion}"></span>
+                  th:if="${#fields.hasErrors('sinopsis')}"
+                  th:errors="*{sinopsis}"></span>
+        </div>
+
+        <div class="campo">
+            <label for="urlTrailer">URL del tráiler (YouTube)</label>
+            <input id="urlTrailer"
+                   type="text"
+                   th:field="*{urlTrailer}">
+        </div>
+
+        <div class="campo">
+            <label for="urlReproduccion">URL para reproducir (embed/archivo)</label>
+            <input id="urlReproduccion"
+                   type="text"
+                   th:field="*{urlReproduccion}">
         </div>
 
         <div class="acciones">
