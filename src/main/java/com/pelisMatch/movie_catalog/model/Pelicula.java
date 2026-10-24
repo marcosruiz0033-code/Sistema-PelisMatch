@@ -22,8 +22,6 @@ public class Pelicula extends ContenidoBase {
 
     private Integer duracion;
 
-    private String urlReproduccion;
-
     public Pelicula() {
     }
 

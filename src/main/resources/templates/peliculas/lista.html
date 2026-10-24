@@ -26,9 +26,7 @@
                     </p>
                     <p class="banner-sinopsis" th:text="${p.sinopsis}">Sinopsis</p>
                     <div class="d-flex flex-wrap gap-2">
-                        <button class="btn-custom btn-custom-primary banner-boton" th:if="${p.urlReproduccion != null and !p.urlReproduccion.isEmpty()}" th:attr="data-url=${p.urlReproduccion},data-titulo=${p.titulo}" onclick="abrirReproductorGlobal(this)">
-                            <i class="bi bi-play-fill"></i> Ver
-                        </button>
+
                         <button class="btn-custom btn-custom-secondary banner-boton" th:if="${p.urlTrailer != null and !p.urlTrailer.isEmpty()}" th:attr="data-trailer=${p.urlTrailer},data-titulo=${'Tráiler - ' + p.titulo}" onclick="abrirTrailerGlobal(this)">
                             <i class="bi bi-youtube"></i> Ver tráiler
                         </button>
@@ -88,7 +86,7 @@
                  th:with="p=${i < #lists.size(peliculas) ? peliculas[i] : null}">
                 <span class="top-rank" th:text="${i + 1}">1</span>
 
-                <article class="tarjeta" th:if="${p != null}" th:attr="data-url=${p.urlReproduccion},data-titulo=${p.titulo},data-sinopsis=${p.sinopsis},data-categoria=${p.categoria != null ? p.categoria.nombre : ''},data-anio=${p.anio},data-director=${p.director},data-trailer=${p.urlTrailer},data-netflix=${p.urlNetflix},data-prime=${p.urlPrimeVideo},data-disney=${p.urlDisneyPlus},data-max=${p.urlMax},data-apple=${p.urlAppleTv}" style="cursor:pointer" onclick="abrirDetallePelicula(this)">
+                <article class="tarjeta" th:if="${p != null}" th:attr="data-titulo=${p.titulo},data-sinopsis=${p.sinopsis},data-categoria=${p.categoria != null ? p.categoria.nombre : ''},data-anio=${p.anio},data-director=${p.director},data-trailer=${p.urlTrailer},data-netflix=${p.urlNetflix},data-prime=${p.urlPrimeVideo},data-disney=${p.urlDisneyPlus},data-max=${p.urlMax},data-apple=${p.urlAppleTv}" style="cursor:pointer" onclick="abrirDetallePelicula(this)">
                     <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
                     <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
                     <div class="card-body">

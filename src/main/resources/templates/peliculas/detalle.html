@@ -30,9 +30,7 @@
             </p>
 
             <div class="d-flex flex-wrap gap-2 mb-3">
-                <button class="btn btn-light" th:if="${pelicula.urlReproduccion != null and !pelicula.urlReproduccion.isEmpty()}" th:attr="data-url=${pelicula.urlReproduccion},data-titulo=${pelicula.titulo}" onclick="abrirReproductorGlobal(this)">
-                    <i class="bi bi-play-fill"></i> Ver película
-                </button>
+
                 <button class="btn btn-outline-light" th:if="${pelicula.urlTrailer != null and !pelicula.urlTrailer.isEmpty()}" th:attr="data-trailer=${pelicula.urlTrailer},data-titulo=${'Tráiler - ' + pelicula.titulo}" onclick="abrirTrailerGlobal(this)">
                     <i class="bi bi-youtube"></i> Ver tráiler
                 </button>
