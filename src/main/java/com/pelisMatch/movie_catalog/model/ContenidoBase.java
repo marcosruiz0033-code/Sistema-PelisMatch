@@ -7,6 +7,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +26,8 @@ public abstract class ContenidoBase {
     private String sinopsis;
 
     @NotNull(message = "El año es obligatorio")
+    @Min(value = 1888, message = "El año debe ser 1888 o posterior")
+    @Max(value = 2100, message = "El año no puede ser posterior a 2100")
     @Column(nullable = false)
     private Integer anio;
 

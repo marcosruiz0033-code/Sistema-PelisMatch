@@ -14,6 +14,8 @@ public interface SerieRepository extends JpaRepository<Serie, Integer> {
 
     List<Serie> findAllByOrderByIdSerieDesc(Pageable pageable);
 
+    List<Serie> findAllByOrderByIdSerieDesc();
+
     List<Serie> findByIdSerieNotInOrderByIdSerieDesc(List<Integer> ids, Pageable pageable);
 
 }

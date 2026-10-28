@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/admin/peliculas")
@@ -51,6 +52,7 @@ public class AdminPeliculaViewController {
     public String guardar(
             @Valid @ModelAttribute("pelicula") Pelicula pelicula,
             BindingResult result,
+            @RequestParam(required = false) Integer categoriaId,
             Model model) {
 
         if (result.hasErrors()) {
@@ -58,6 +60,8 @@ public class AdminPeliculaViewController {
             return "peliculas/form";
         }
 
+        pelicula.setCategoria(categoriaId == null ? null
+                : categoriaService.buscarPorId(categoriaId).orElse(null));
         service.guardar(pelicula);
         return "redirect:/admin/peliculas";
     }

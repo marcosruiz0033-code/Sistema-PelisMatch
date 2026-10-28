@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -23,7 +24,10 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public String home(Model model) {
+    public String home(Model model, HttpSession session) {
+        if ("ADMIN".equals(session.getAttribute("usuarioRol"))) {
+            return "redirect:/admin/dashboard";
+        }
         List<Serie> destacadas = serieService.listarDestacadas();
         List<Pelicula> peliculas = peliculaService.listar();
 

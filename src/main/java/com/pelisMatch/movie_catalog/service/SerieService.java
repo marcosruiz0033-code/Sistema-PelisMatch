@@ -21,7 +21,11 @@ public class SerieService {
     }
 
     public List<Serie> listarTodas() {
-        return serieRepository.findAll();
+        return serieRepository.findAllByOrderByIdSerieDesc();
+    }
+
+    public long contar() {
+        return serieRepository.count();
     }
 
     public List<Serie> listarDestacadas() {
@@ -43,6 +47,14 @@ public class SerieService {
 
     public List<Serie> buscarPorTitulo(String titulo) {
         return serieRepository.findByTituloContainingIgnoreCase(titulo);
+    }
+
+    public Serie guardar(Serie serie) {
+        return serieRepository.save(serie);
+    }
+
+    public void eliminar(Integer id) {
+        serieRepository.deleteById(id);
     }
 
 }

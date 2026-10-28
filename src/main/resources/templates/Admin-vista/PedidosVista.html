@@ -1,255 +1,90 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace = "~{Fragments/AdminLayout :: base(~{::contenidoAdmin})}">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{Fragments/AdminLayout :: base(~{::contenidoAdmin})}">
 <body>
-    <main th:fragment="contenidoAdmin" class="p-4 content">
-        <!-- Encabezado -->
-        <header class="d-flex justify-content-between
-                   align-items-center flex-wrap gap-3 mb-4">
+<main th:fragment="contenidoAdmin" class="content">
+    <header class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <span class="form-kicker">ADMINISTRACIÓN DEL CATÁLOGO</span>
+            <h1 class="h2 fw-bold mt-2 mb-1">Series</h1>
+            <p class="text-secondary mb-0">Agrega, edita y organiza las series disponibles para los usuarios.</p>
+        </div>
+        <a class="btn btn-pelimatch rounded-3 px-4" th:href="@{/admin/series/nueva}">
+            <i class="bi bi-plus-lg me-2"></i>Agregar serie
+        </a>
+    </header>
 
-            <div>
-                <h1 class="h3 fw-bold mb-1">
-                    Gestión de pedidos
-                </h1>
-
-                <p class="text-muted mb-0">
-                    Administra y supervisa los pedidos de tu tienda.
-                </p>
+    <section class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-0 p-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <h2 class="h5 fw-bold mb-1">Series registradas</h2>
+                    <p class="text-secondary small mb-0">El listado se carga desde la base de datos.</p>
+                </div>
+                <span class="badge rounded-pill text-bg-light px-3 py-2"
+                      th:text="${#lists.size(series) + ' series'}">0 series</span>
             </div>
-
-            <button type="button" class="btn btn-primary">
-                <i class="bi bi-arrow-clockwise"></i>
-                Actualizar
-            </button>
-        </header>
-
-        <!-- Estadísticas -->
-        <section class="row g-3 mb-4">
-
-            <div class="col-12 col-sm-6 col-xl-3">
-                <article class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <p class="text-muted mb-2">
-                            Total de pedidos
-                        </p>
-                        <h2 class="h3 fw-bold mb-0"
-                            th:text="${totalPedidos ?: 0}">
-                            0
-                        </h2>
-                    </div>
-                </article>
-            </div>
-
-            <div class="col-12 col-sm-6 col-xl-3">
-                <article class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <p class="text-muted mb-2">
-                            Pendientes
-                        </p>
-                        <h2 class="h3 fw-bold text-warning mb-0"
-                            th:text="${pedidosPendientes ?: 0}">
-                            0
-                        </h2>
-                    </div>
-                </article>
-            </div>
-
-            <div class="col-12 col-sm-6 col-xl-3">
-                <article class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <p class="text-muted mb-2">
-                            En preparación
-                        </p>
-                        <h2 class="h3 fw-bold text-primary mb-0"
-                            th:text="${pedidosPreparacion ?: 0}">
-                            0
-                        </h2>
-                    </div>
-                </article>
-            </div>
-
-            <div class="col-12 col-sm-6 col-xl-3">
-                <article class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <p class="text-muted mb-2">
-                            Entregados
-                        </p>
-                        <h2 class="h3 fw-bold text-success mb-0"
-                            th:text="${pedidosEntregados ?: 0}">
-                            0
-                        </h2>
-                    </div>
-                </article>
-            </div>
-
-        </section>
-
-        <!-- Listado de pedidos -->
-        <section class="card border-0 shadow-sm">
-
-            <div class="card-header bg-white border-0 p-3">
-                <h2 class="h5 fw-bold mb-1">
-                    Listado de pedidos
-                </h2>
-
-                <p class="text-muted small mb-0">
-                    Consulta el detalle y el estado de cada pedido.
-                </p>
-            </div>
-
-            <!-- Búsqueda y filtros -->
-            <div class="card-body border-bottom">
-                <form method="get"
-                      th:action="@{/admin/pedidos}"
-                      class="row g-3">
-
-                    <div class="col-12 col-md-6">
-                        <label for="buscar" class="form-label">
-                            Buscar pedido
-                        </label>
-
-                        <input type="search"
-                               id="buscar"
-                               name="buscar"
-                               class="form-control"
-                               placeholder="Código o nombre del cliente"
-                               th:value="${buscar}">
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                        <label for="estado" class="form-label">
-                            Estado
-                        </label>
-
-                        <select id="estado"
-                                name="estado"
-                                class="form-select">
-
-                            <option value="">Todos los estados</option>
-
-                            <option value="PENDIENTE"
-                                    th:selected="${estado == 'PENDIENTE'}">
-                                Pendiente
-                            </option>
-
-                            <option value="PREPARACION"
-                                    th:selected="${estado == 'PREPARACION'}">
-                                En preparación
-                            </option>
-
-                            <option value="ENVIADO"
-                                    th:selected="${estado == 'ENVIADO'}">
-                                Enviado
-                            </option>
-
-                            <option value="ENTREGADO"
-                                    th:selected="${estado == 'ENTREGADO'}">
-                                Entregado
-                            </option>
-
-                            <option value="CANCELADO"
-                                    th:selected="${estado == 'CANCELADO'}">
-                                Cancelado
-                            </option>
-                        </select>
-                    </div>
-
-                    <div class="col-12 col-md-2 d-flex align-items-end">
-                        <button type="submit"
-                                class="btn btn-primary w-100">
-                            Filtrar
-                        </button>
-                    </div>
-
-                </form>
-            </div>
-
-            <!-- Tabla -->
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-
-                    <thead class="table-light">
-                    <tr>
-                        <th scope="col">Código</th>
-                        <th scope="col">Cliente</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col" class="text-center">
-                            Acciones
-                        </th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <tr th:each="pedido : ${pedidos}">
-                        <td th:text="${pedido.id}">1</td>
-
-                        <td th:text="${pedido.cliente.nombre}">
-                            Cliente
-                        </td>
-
-                        <td th:text="${#temporals.format(
-                            pedido.fecha, 'dd/MM/yyyy HH:mm')}">
-                            21/10/2026
-                        </td>
-
-                        <td th:text="${#numbers.formatDecimal(
-                            pedido.total, 1, 2)}">
-                            0.00
-                        </td>
-
-                        <td>
-                            <span class="badge text-bg-warning"
-                                  th:if="${pedido.estado == 'PENDIENTE'}">
-                                Pendiente
-                            </span>
-
-                            <span class="badge text-bg-primary"
-                                  th:if="${pedido.estado == 'PREPARACION'}">
-                                En preparación
-                            </span>
-
-                            <span class="badge text-bg-info"
-                                  th:if="${pedido.estado == 'ENVIADO'}">
-                                Enviado
-                            </span>
-
-                            <span class="badge text-bg-success"
-                                  th:if="${pedido.estado == 'ENTREGADO'}">
-                                Entregado
-                            </span>
-
-                            <span class="badge text-bg-danger"
-                                  th:if="${pedido.estado == 'CANCELADO'}">
-                                Cancelado
-                            </span>
-                        </td>
-
-                        <td class="text-center">
-                            <a th:href="@{/admin/pedidos/{id}(
-                                id=${pedido.id})}"
-                               class="btn btn-sm btn-outline-primary"
-                               aria-label="Ver detalle del pedido">
-                                Ver detalle
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th class="ps-4">Serie</th>
+                    <th>Categoría</th>
+                    <th>Año</th>
+                    <th>Temporadas</th>
+                    <th>Estado</th>
+                    <th class="text-end pe-4">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(series)}">
+                    <td colspan="6" class="text-center py-5">
+                        <i class="bi bi-tv display-5 text-secondary"></i>
+                        <h3 class="h5 fw-bold mt-3">Aún no hay series</h3>
+                        <p class="text-secondary">Agrega una serie para que aparezca en la vista de usuarios.</p>
+                        <a class="btn btn-pelimatch rounded-3" th:href="@{/admin/series/nueva}">Agregar primera serie</a>
+                    </td>
+                </tr>
+                <tr th:each="serie : ${series}">
+                    <td class="ps-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <img th:if="${serie.imagen != null and !serie.imagen.isBlank()}" th:src="${serie.imagen}"
+                                 th:alt="${serie.titulo}" class="admin-poster">
+                            <div th:unless="${serie.imagen != null and !serie.imagen.isBlank()}" class="admin-poster admin-poster-placeholder">
+                                <i class="bi bi-tv"></i>
+                            </div>
+                            <div>
+                                <div class="fw-semibold" th:text="${serie.titulo}">Título</div>
+                                <small class="text-secondary text-truncate d-inline-block admin-synopsis"
+                                       th:text="${serie.sinopsis}" th:title="${serie.sinopsis}">Sinopsis</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td th:text="${serie.categoria != null ? serie.categoria.nombre : 'Sin categoría'}">Categoría</td>
+                    <td th:text="${serie.anio}">2025</td>
+                    <td th:text="${serie.temporadas != null ? serie.temporadas : '-'}">1</td>
+                    <td><span class="badge text-bg-light" th:text="${serie.estado}">En emisión</span></td>
+                    <td class="text-end pe-4">
+                        <div class="d-flex justify-content-end gap-2">
+                            <a class="btn btn-sm btn-outline-primary rounded-3"
+                               th:href="@{/admin/series/editar/{id}(id=${serie.idSerie})}" aria-label="Editar serie">
+                                <i class="bi bi-pencil-square"></i>
                             </a>
-                        </td>
-                    </tr>
-
-                    <tr th:if="${#lists.isEmpty(pedidos)}">
-                        <td colspan="6"
-                            class="text-center text-muted py-5">
-                            No se encontraron pedidos.
-                        </td>
-                    </tr>
-                    </tbody>
-
-                </table>
-            </div>
-        </section>
-    </main>
+                            <form th:action="@{/admin/series/eliminar/{id}(id=${serie.idSerie})}" method="post"
+                                  onsubmit="return confirm('¿Eliminar esta serie?');">
+                                <button class="btn btn-sm btn-outline-danger rounded-3" type="submit" aria-label="Eliminar serie">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer bg-white border-0 px-4 py-3 text-secondary small">Panel de administración · PelisMatch</div>
+    </section>
+</main>
 </body>
 </html>

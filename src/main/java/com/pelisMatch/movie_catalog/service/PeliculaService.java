@@ -21,7 +21,11 @@ public class PeliculaService {
     }
 
     public List<Pelicula> listar() {
-        return repository.findAll();
+        return repository.findAllByOrderByIdDesc();
+    }
+
+    public long contar() {
+        return repository.count();
     }
 
     public List<Pelicula> listarPorGenero(String genero) {

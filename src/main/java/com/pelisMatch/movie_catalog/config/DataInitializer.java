@@ -6,9 +6,12 @@ import com.pelisMatch.movie_catalog.model.Serie;
 import com.pelisMatch.movie_catalog.repository.CategoriaRepository;
 import com.pelisMatch.movie_catalog.repository.PeliculaRepository;
 import com.pelisMatch.movie_catalog.repository.SerieRepository;
+import com.pelisMatch.movie_catalog.repository.UsuarioRepository;
+import com.pelisMatch.movie_catalog.model.Usuario;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -23,11 +26,21 @@ public class DataInitializer {
     @Bean
     CommandLineRunner cargarDatos(CategoriaRepository categoriaRepository,
                                   SerieRepository serieRepository,
-                                  PeliculaRepository peliculaRepository) {
+                                  PeliculaRepository peliculaRepository,
+                                  UsuarioRepository usuarioRepository,
+                                  PasswordEncoder passwordEncoder) {
         return args -> {
             Map<String, Categoria> categorias = cargarCategorias(categoriaRepository);
             cargarSeries(serieRepository, categorias);
             cargarPeliculas(peliculaRepository, categorias);
+            usuarioRepository.findByCorreoIgnoreCase("marcos@utp.edu.pe").orElseGet(() -> {
+                Usuario administrador = new Usuario();
+                administrador.setNombre("Marcos");
+                administrador.setCorreo("marcos@utp.edu.pe");
+                administrador.setPassword(passwordEncoder.encode("1475369"));
+                administrador.setRol("ADMIN");
+                return usuarioRepository.save(administrador);
+            });
         };
     }
 

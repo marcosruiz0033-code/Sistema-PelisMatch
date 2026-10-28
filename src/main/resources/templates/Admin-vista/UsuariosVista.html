@@ -1,12 +1,69 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace = "~{Fragments/AdminLayout :: base(~{::contenidoAdmin})}">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{Fragments/AdminLayout :: base(~{::contenidoAdmin})}">
 <body>
-    <main th:fragment="contenidoAdmin" class="p-4 content">
-        <p>hola usuario </p>
-    </main>
+<main th:fragment="contenidoAdmin" class="content">
+    <header class="mb-4">
+        <span class="form-kicker">CUENTAS DE PELISMATCH</span>
+        <h1 class="h2 fw-bold mt-2 mb-1">Usuarios</h1>
+        <p class="text-secondary mb-0">Las cuentas públicas se registran como usuarios. Desde aquí puedes crear administradores.</p>
+    </header>
+    <div class="alert alert-success" th:if="${mensajeExito}" th:text="${mensajeExito}"></div>
+    <section class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+            <div class="mb-3">
+                <h2 class="h5 fw-bold mb-1">Registrar administrador</h2>
+                <p class="text-secondary small mb-0">Esta opción solo está disponible dentro del panel de administración.</p>
+            </div>
+            <form th:action="@{/admin/usuarios/administrador}" th:object="${administrador}" method="post">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label" for="adminNombre">Nombre</label>
+                        <input class="form-control" id="adminNombre" type="text" th:field="*{nombre}" required>
+                        <small class="text-danger" th:errors="*{nombre}"></small>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="adminCorreo">Correo electrónico</label>
+                        <input class="form-control" id="adminCorreo" type="email" th:field="*{correo}" required>
+                        <small class="text-danger" th:errors="*{correo}"></small>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="adminPassword">Contraseña</label>
+                        <input class="form-control" id="adminPassword" type="password" th:field="*{password}" required>
+                        <small class="text-danger" th:errors="*{password}"></small>
+                    </div>
+                </div>
+                <button class="btn btn-pelimatch rounded-3 mt-3" type="submit">
+                    <i class="bi bi-person-plus me-1"></i> Crear administrador
+                </button>
+            </form>
+        </div>
+    </section>
+    <section class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-0 p-4">
+            <h2 class="h5 fw-bold mb-1">Usuarios registrados</h2>
+            <p class="text-secondary small mb-0" th:text="${#lists.size(usuarios) + ' cuentas'}">0 cuentas</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr><th class="ps-4">Nombre</th><th>Correo electrónico</th><th>Tipo de cuenta</th></tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(usuarios)}">
+                    <td colspan="3" class="text-center text-secondary py-5">Todavía no hay cuentas registradas.</td>
+                </tr>
+                <tr th:each="usuario : ${usuarios}">
+                    <td class="ps-4 fw-semibold" th:text="${usuario.nombre}">Nombre</td>
+                    <td th:text="${usuario.correo}">correo@ejemplo.com</td>
+                    <td><span class="badge rounded-pill"
+                              th:classappend="${usuario.rol == 'ADMIN'} ? 'text-bg-primary' : 'text-bg-light'"
+                              th:text="${usuario.rol == 'ADMIN' ? 'Administrador' : 'Usuario'}">Usuario</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
 </body>
 </html>

@@ -35,9 +35,12 @@
                     <i class="bi bi-search"></i>
                 </button>
             </form>
-            <button class="icon-btn" type="button" aria-label="Cuenta">
-                <i class="bi bi-person-circle"></i>
-            </button>
+            <div class="d-flex align-items-center gap-2">
+                <span class="d-none d-lg-inline" th:text="${session.usuarioNombre}">Cuenta</span>
+                <a class="icon-btn" th:href="@{/logout}" aria-label="Cerrar sesión" title="Cerrar sesión">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+            </div>
         </div>
     </div>
 </header>

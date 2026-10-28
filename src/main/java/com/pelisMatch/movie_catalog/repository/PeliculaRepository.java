@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface PeliculaRepository extends JpaRepository<Pelicula, Long> {
 
+    List<Pelicula> findAllByOrderByIdDesc();
+
     List<Pelicula> findByCategoriaNombreIgnoreCase(String nombre);
 
     List<Pelicula> findByTituloContainingIgnoreCase(String titulo);
