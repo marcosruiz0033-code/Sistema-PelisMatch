@@ -1,4 +1,4 @@
-﻿package com.pelisMatch.movie_catalog.config;
+package com.pelisMatch.movie_catalog.config;
 
 import com.pelisMatch.movie_catalog.model.Categoria;
 import com.pelisMatch.movie_catalog.model.Pelicula;
@@ -9,7 +9,6 @@ import com.pelisMatch.movie_catalog.repository.SerieRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
