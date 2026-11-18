@@ -24,12 +24,14 @@ public class PeliculaViewController {
     @GetMapping
     public String listar(@RequestParam(required = false) String q,
                          @RequestParam(required = false) String genero,
+                         @RequestParam(defaultValue = "populares") String orden,
                          Model model) {
-        model.addAttribute("peliculas", service.buscar(q, genero));
+        model.addAttribute("peliculas", service.buscar(q, genero, orden));
         model.addAttribute("masValoradas", service.masValoradas(5));
         model.addAttribute("generos", service.generos());
         model.addAttribute("q", q);
-        model.addAttribute("generoActual", genero);
+        model.addAttribute("generoActual", genero == null ? "" : genero);
+        model.addAttribute("ordenActual", orden);
         return "peliculas/lista";
     }
 

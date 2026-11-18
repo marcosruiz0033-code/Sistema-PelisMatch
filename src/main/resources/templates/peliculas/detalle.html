@@ -25,6 +25,9 @@
                 <span th:text="${pelicula.categoria != null ? pelicula.categoria.nombre : ''}">Categoría</span>
                 <span class="punto" th:if="${pelicula.director != null and !pelicula.director.isEmpty()}">·</span>
                 <span th:if="${pelicula.director != null and !pelicula.director.isEmpty()}" th:text="${pelicula.director}">Director</span>
+                <span class="punto" th:if="${pelicula.puntuacion != null}">·</span>
+                <span th:if="${pelicula.puntuacion != null}"
+                      th:text="${#numbers.formatDecimal(pelicula.puntuacion, 1, 'COMMA', 1, 'POINT')} + '/10'">8.5/10</span>
                 <span class="punto" th:if="${pelicula.duracion != null}">·</span>
                 <span th:if="${pelicula.duracion != null}"><span th:text="${pelicula.duracion}">120</span> min</span>
             </p>
@@ -38,6 +41,11 @@
 
             <h2 class="seccion-titulo detalle-subtitulo">Sinopsis</h2>
             <p class="detalle-sinopsis" th:text="${pelicula.sinopsis}">Sinopsis</p>
+
+            <div th:if="${pelicula.reparto != null and !pelicula.reparto.isBlank()}">
+                <h2 class="seccion-titulo detalle-subtitulo">Reparto</h2>
+                <p class="detalle-sinopsis" th:text="${pelicula.reparto}">Reparto</p>
+            </div>
 
             <h2 class="seccion-titulo detalle-subtitulo">Dónde ver</h2>
             <div class="plataformas">

@@ -8,7 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -55,15 +55,52 @@ public class PeliculaService {
     }
 
     /** Busca por texto en el título y/o filtra por género. Los más nuevos primero. */
-    public List<Pelicula> buscar(String q, String genero) {
-        String texto = q == null ? "" : q.trim().toLowerCase();
-        boolean sinGenero = genero == null || genero.isBlank();
+    public List<Pelicula> buscar(String q, String genero, String orden) {
+        String texto = q == null ? "" : q.trim().toLowerCase(Locale.ROOT);
+        String filtroGenero = genero == null ? "" : genero.trim();
         return repository.findAll().stream()
                 .filter(p -> texto.isEmpty()
-                        || (p.getTitulo() != null && p.getTitulo().toLowerCase().contains(texto)))
-                .filter(p -> sinGenero || genero.equalsIgnoreCase(p.getGenero()))
-                .sorted(Comparator.comparing(Pelicula::getId).reversed())
+                        || (p.getTitulo() != null
+                        && p.getTitulo().toLowerCase(Locale.ROOT).contains(texto)))
+                .filter(p -> filtroGenero.isEmpty()
+                        || filtroGenero.equalsIgnoreCase(obtenerGenero(p)))
+                .sorted(comparador(orden))
                 .toList();
+    }
+
+    private Comparator<Pelicula> comparador(String orden) {
+        String criterio = orden == null || orden.isBlank()
+                ? "populares"
+                : orden.trim().toLowerCase(Locale.ROOT);
+
+        Comparator<Pelicula> porIdDescendente = Comparator.comparing(
+                Pelicula::getId, Comparator.nullsLast(Comparator.reverseOrder()));
+
+        return switch (criterio) {
+            case "populares" -> Comparator.comparing(
+                    Pelicula::getPuntuacion, Comparator.nullsLast(Comparator.reverseOrder()))
+                    .thenComparing(Pelicula::getAnio,
+                            Comparator.nullsLast(Comparator.reverseOrder()))
+                    .thenComparing(porIdDescendente);
+            case "recientes" -> Comparator.comparing(
+                    Pelicula::getAnio, Comparator.nullsLast(Comparator.reverseOrder()))
+                    .thenComparing(porIdDescendente);
+            case "antiguas" -> Comparator.comparing(
+                    Pelicula::getAnio, Comparator.nullsLast(Comparator.naturalOrder()))
+                    .thenComparing(Pelicula::getId, Comparator.nullsLast(Comparator.naturalOrder()));
+            case "az" -> Comparator.comparing(
+                    Pelicula::getTitulo, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Pelicula::getId, Comparator.nullsLast(Comparator.naturalOrder()));
+            default -> throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "El criterio de orden no es válido");
+        };
+    }
+
+    private String obtenerGenero(Pelicula pelicula) {
+        if (pelicula.getCategoria() != null && pelicula.getCategoria().getNombre() != null) {
+            return pelicula.getCategoria().getNombre();
+        }
+        return pelicula.getGenero();
     }
 
     /** Las películas con mejor puntuación (para la barra lateral). */
@@ -78,10 +115,11 @@ public class PeliculaService {
     /** Lista de géneros sin repetir, para el menú. */
     public List<String> generos() {
         return repository.findAll().stream()
-                .map(Pelicula::getGenero)
-                .filter(Objects::nonNull)
+                .map(this::obtenerGenero)
+                .filter(genero -> genero != null && !genero.isBlank())
+                .map(String::trim)
                 .distinct()
-                .sorted()
+                .sorted(String.CASE_INSENSITIVE_ORDER)
                 .toList();
     }
 
