@@ -1,6 +1,7 @@
 package com.pelisMatch.movie_catalog.repository;
 
 import com.pelisMatch.movie_catalog.model.Serie;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -17,5 +18,7 @@ public interface SerieRepository extends JpaRepository<Serie, Integer> {
     List<Serie> findAllByOrderByIdSerieDesc();
 
     List<Serie> findByIdSerieNotInOrderByIdSerieDesc(List<Integer> ids, Pageable pageable);
+
+    Page<Serie> findPageByOrderByIdSerieDesc(Pageable pageable);
 
 }

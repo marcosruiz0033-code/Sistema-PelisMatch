@@ -2,6 +2,7 @@ package com.pelisMatch.movie_catalog.service;
 
 import com.pelisMatch.movie_catalog.model.Serie;
 import com.pelisMatch.movie_catalog.repository.SerieRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,16 @@ public class SerieService {
 
     public List<Serie> listarTodas() {
         return serieRepository.findAllByOrderByIdSerieDesc();
+    }
+
+    public Page<Serie> listarPagina(int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(Math.max(0, pagina), tamanio);
+        Page<Serie> page = serieRepository.findPageByOrderByIdSerieDesc(pageable);
+        if (page.getTotalPages() > 0 && page.getNumber() >= page.getTotalPages()) {
+            page = serieRepository.findPageByOrderByIdSerieDesc(
+                    PageRequest.of(page.getTotalPages() - 1, tamanio));
+        }
+        return page;
     }
 
     public long contar() {

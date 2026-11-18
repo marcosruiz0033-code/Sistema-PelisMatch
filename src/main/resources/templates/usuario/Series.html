@@ -193,18 +193,29 @@
         </div>
 
         <!-- ===== 4. Paginación ===== -->
-        <nav class="paginacion" aria-label="Paginación de series">
-            <button class="pagina-btn" type="button" aria-label="Página anterior" disabled>
+        <nav class="paginacion" aria-label="Paginación de series" th:if="${totalPaginas > 1}">
+            <button class="pagina-btn" type="button" aria-label="Página anterior" disabled
+                    th:if="${paginaActual == 0}">
                 <i class="bi bi-chevron-left"></i>
             </button>
-            <a class="pagina-btn active" href="#" aria-current="page">1</a>
-            <a class="pagina-btn" href="#">2</a>
-            <a class="pagina-btn" href="#">3</a>
-            <span class="pagina-ellipsis">…</span>
-            <a class="pagina-btn" href="#">10</a>
-            <button class="pagina-btn" type="button" aria-label="Página siguiente">
+            <a class="pagina-btn" th:unless="${paginaActual == 0}"
+               th:href="@{/series(pagina=${paginaActual - 1})}" aria-label="Página anterior">
+                <i class="bi bi-chevron-left"></i>
+            </a>
+
+            <a class="pagina-btn" th:each="p : ${#numbers.sequence(1, totalPaginas)}"
+               th:classappend="${p - 1 == paginaActual} ? 'active'"
+               th:attr="aria-current=${p - 1 == paginaActual ? 'page' : null}"
+               th:href="@{/series(pagina=${p - 1})}" th:text="${p}">1</a>
+
+            <button class="pagina-btn" type="button" aria-label="Página siguiente" disabled
+                    th:if="${paginaActual == totalPaginas - 1}">
                 <i class="bi bi-chevron-right"></i>
             </button>
+            <a class="pagina-btn" th:unless="${paginaActual == totalPaginas - 1}"
+               th:href="@{/series(pagina=${paginaActual + 1})}" aria-label="Página siguiente">
+                <i class="bi bi-chevron-right"></i>
+            </a>
         </nav>
     </section>
 

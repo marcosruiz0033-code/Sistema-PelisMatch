@@ -2,6 +2,9 @@ package com.pelisMatch.movie_catalog.service;
 
 import com.pelisMatch.movie_catalog.model.Pelicula;
 import com.pelisMatch.movie_catalog.repository.PeliculaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +25,16 @@ public class PeliculaService {
 
     public List<Pelicula> listar() {
         return repository.findAllByOrderByIdDesc();
+    }
+
+    public Page<Pelicula> listarPagina(int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(Math.max(0, pagina), tamanio);
+        Page<Pelicula> page = repository.findPageByOrderByIdDesc(pageable);
+        if (page.getTotalPages() > 0 && page.getNumber() >= page.getTotalPages()) {
+            page = repository.findPageByOrderByIdDesc(
+                    PageRequest.of(page.getTotalPages() - 1, tamanio));
+        }
+        return page;
     }
 
     public long contar() {
