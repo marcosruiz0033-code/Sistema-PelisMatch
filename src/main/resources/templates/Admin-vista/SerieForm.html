@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{Fragments/AdminLayout :: base(~{::contenidoAdmin})}">
+<body>
+<main th:fragment="contenidoAdmin" class="content">
+    <div class="form-admin-wrap">
+        <a class="text-decoration-none text-secondary" th:href="@{/admin/series}">
+            <i class="bi bi-arrow-left me-1"></i> Volver a series
+        </a>
+        <div class="mt-3 mb-4">
+            <span class="form-kicker">CATÁLOGO DE SERIES</span>
+            <h1 class="h2 fw-bold mt-2"
+                th:text="${serie.idSerie == null ? 'Agregar serie' : 'Editar serie'}">Agregar serie</h1>
+            <p class="text-secondary mb-0">Completa los datos para mostrar esta serie en el catálogo de usuarios.</p>
+        </div>
+        <form class="card border-0 shadow-sm rounded-4 p-3 p-md-4"
+              th:action="@{/admin/series/guardar}" th:object="${serie}" method="post">
+            <input type="hidden" th:field="*{idSerie}">
+            <div class="form-section-title"><i class="bi bi-card-heading"></i> Información principal</div>
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label" for="titulo">Título <span class="text-danger">*</span></label>
+                    <input class="form-control" id="titulo" type="text" th:field="*{titulo}" maxlength="150" required>
+                    <small class="text-danger" th:errors="*{titulo}"></small>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="anio">Año <span class="text-danger">*</span></label>
+                    <input class="form-control" id="anio" type="number" th:field="*{anio}" min="1888" max="2100" required>
+                    <small class="text-danger" th:errors="*{anio}"></small>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="categoriaId">Categoría</label>
+                    <select class="form-select" id="categoriaId" name="categoriaId">
+                        <option value="">Sin categoría</option>
+                        <option th:each="cat : ${categorias}" th:value="${cat.idCategoria}"
+                                th:text="${cat.nombre}"
+                                th:selected="${serie.categoria != null and serie.categoria.idCategoria == cat.idCategoria}"></option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="estado">Estado <span class="text-danger">*</span></label>
+                    <input class="form-control" id="estado" type="text" th:field="*{estado}" maxlength="30"
+                           placeholder="En emisión, finalizada..." required>
+                    <small class="text-danger" th:errors="*{estado}"></small>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="temporadas">Temporadas</label>
+                    <input class="form-control" id="temporadas" type="number" th:field="*{temporadas}" min="1">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="imagen">URL de la imagen o póster</label>
+                    <input class="form-control" id="imagen" type="url" th:field="*{imagen}" maxlength="500" placeholder="https://...">
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="sinopsis">Descripción / sinopsis <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="sinopsis" th:field="*{sinopsis}" rows="4" maxlength="2000" required></textarea>
+                    <small class="text-danger" th:errors="*{sinopsis}"></small>
+                </div>
+            </div>
+            <div class="form-section-title mt-4"><i class="bi bi-play-btn"></i> Enlaces y plataformas</div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="urlTrailer">URL del tráiler</label>
+                    <input class="form-control" id="urlTrailer" type="url" th:field="*{urlTrailer}" maxlength="500">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="urlNetflix">Netflix</label>
+                    <input class="form-control" id="urlNetflix" type="url" th:field="*{urlNetflix}" maxlength="500">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="urlPrimeVideo">Prime Video</label>
+                    <input class="form-control" id="urlPrimeVideo" type="url" th:field="*{urlPrimeVideo}" maxlength="500">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="urlDisneyPlus">Disney+</label>
+                    <input class="form-control" id="urlDisneyPlus" type="url" th:field="*{urlDisneyPlus}" maxlength="500">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="urlMax">Max</label>
+                    <input class="form-control" id="urlMax" type="url" th:field="*{urlMax}" maxlength="500">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="urlAppleTv">Apple TV+</label>
+                    <input class="form-control" id="urlAppleTv" type="url" th:field="*{urlAppleTv}" maxlength="500">
+                </div>
+            </div>
+            <div class="d-flex flex-wrap justify-content-end gap-2 mt-4">
+                <a class="btn btn-light rounded-3 px-4" th:href="@{/admin/series}">Cancelar</a>
+                <button class="btn btn-pelimatch rounded-3 px-4" type="submit">
+                    <i class="bi bi-check2 me-1"></i> Guardar serie
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

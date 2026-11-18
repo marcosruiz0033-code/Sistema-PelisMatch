@@ -27,11 +27,19 @@ public class PeliculaService {
     }
 
     public List<Pelicula> listar() {
-        return repository.findAll();
+        return repository.findAllByOrderByIdDesc();
+    }
+
+    public long contar() {
+        return repository.count();
     }
 
     public List<Pelicula> listarPorGenero(String genero) {
-        return repository.findByGeneroIgnoreCase(genero);
+        return repository.findByCategoriaNombreIgnoreCase(genero);
+    }
+
+    public List<Pelicula> buscarPorTitulo(String titulo) {
+        return repository.findByTituloContainingIgnoreCase(titulo);
     }
 
     public Optional<Pelicula> buscarPorId(Long id) {

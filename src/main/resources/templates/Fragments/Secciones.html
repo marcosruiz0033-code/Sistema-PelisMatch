@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Cabecera de sección: título + enlace "Ver más" con flecha animada -->
+<div th:fragment="cabecera(titulo, url)" class="seccion-cabecera">
+    <h2 class="seccion-titulo" th:text="${titulo}">Título</h2>
+    <a class="ver-mas" th:href="@{${url}}">
+        <i class="bi bi-chevron-right ver-mas-flecha"></i>
+        <span class="ver-mas-texto">Ver más</span>
+    </a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="base(contenidoUsuario)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/CSS/StyleUsuario.css}">
+    <title>PeliMatch</title>
+</head>
+<body>
+
+<!-- Encabezado -->
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" th:href="@{/}">
+            <i class="bi bi-film"></i> PeliMatch
+        </a>
+
+        <nav class="main-nav">
+            <a class="nav-item-custom" th:classappend="${paginaActiva == 'inicio'} ? 'active' : ''" th:href="@{/}">Inicio</a>
+            <a class="nav-item-custom" th:classappend="${paginaActiva == 'peliculas'} ? 'active' : ''" th:href="@{/peliculas}">Películas</a>
+            <a class="nav-item-custom" th:classappend="${paginaActiva == 'series'} ? 'active' : ''" th:href="@{/series}">Series</a>
+        </nav>
+
+        <div class="header-right">
+            <form class="search-form" th:action="@{/buscar}" method="get" role="search">
+                <label class="visually-hidden" for="busqueda">Buscar películas o series</label>
+                <input id="busqueda" name="q" type="search" placeholder="Buscar..." th:value="${consulta}">
+                <button class="icon-btn" type="submit" aria-label="Buscar">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+            <div class="d-flex align-items-center gap-2">
+                <span class="d-none d-lg-inline" th:text="${session.usuarioNombre}">Cuenta</span>
+                <a class="icon-btn" th:href="@{/logout}" aria-label="Cerrar sesión" title="Cerrar sesión">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Contenido principal -->
+<main class="site-main">
+    <div th:replace="${contenidoUsuario}">
+        <p>Contenido pendiente</p>
+    </div>
+</main>
+
+<!-- Pie de página -->
+<footer class="site-footer">
+    <div class="container">
+        <p class="footer-brand"><i class="bi bi-film"></i> PeliMatch</p>
+        <nav class="footer-nav">
+            <a th:href="@{/}">Inicio</a>
+            <a th:href="@{/peliculas}">Películas</a>
+            <a th:href="@{/series}">Series</a>
+        </nav>
+        <p class="footer-copy">&copy; 2026 PeliMatch — Catálogo de información de películas y series. Proyecto de curso.</p>
+    </div>
+</footer>
+
+<!-- Modal global: Ver película -->
+<div class="modal fade" id="modalReproductorGlobal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="modalReproductorGlobalTitulo"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe id="iframeReproductorGlobal" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+                    <video id="videoReproductorGlobal" src="" controls class="w-100 h-100" style="display:none"></video>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal global: Ver tráiler -->
+<div class="modal fade" id="modalTrailerGlobal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="modalTrailerGlobalTitulo"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe id="iframeTrailerGlobal" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toEmbedUrlGlobal(url) {
+        if (!url) return '';
+        try {
+            if (url.includes('youtube.com/watch')) {
+                const u = new URL(url);
+                const id = u.searchParams.get('v');
+                return id ? 'https://www.youtube.com/embed/' + id + '?autoplay=1' : url;
+            }
+            if (url.includes('youtu.be/')) {
+                const id = url.split('youtu.be/')[1].split('?')[0];
+                return 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+            }
+        } catch (e) {}
+        return url;
+    }
+
+    function abrirReproductorGlobal(el) {
+        const url = el.getAttribute('data-url');
+        const titulo = el.getAttribute('data-titulo') || '';
+        const modal = new bootstrap.Modal(document.getElementById('modalReproductorGlobal'));
+        document.getElementById('modalReproductorGlobalTitulo').textContent = titulo;
+        const iframe = document.getElementById('iframeReproductorGlobal');
+        const video = document.getElementById('videoReproductorGlobal');
+        if (url && url.match(/\.(mp4|webm|ogg)$/i)) {
+            iframe.style.display = 'none';
+            video.style.display = 'block';
+            video.src = url;
+            video.play().catch(()=>{});
+        } else {
+            video.pause();
+            video.src = '';
+            video.style.display = 'none';
+            iframe.style.display = 'block';
+            iframe.src = toEmbedUrlGlobal(url);
+        }
+        modal.show();
+    }
+
+    function abrirReproductorDesdeTarjetaGlobal(el) {
+        if (el.getAttribute('data-url')) {
+            const tmp = document.createElement('button');
+            tmp.setAttribute('data-url', el.getAttribute('data-url'));
+            tmp.setAttribute('data-titulo', el.getAttribute('data-titulo') || '');
+            abrirReproductorGlobal(tmp);
+        }
+    }
+
+    function abrirTrailerGlobal(el) {
+        const url = el.getAttribute('data-trailer');
+        const titulo = el.getAttribute('data-titulo') || 'Tráiler';
+        const modal = new bootstrap.Modal(document.getElementById('modalTrailerGlobal'));
+        document.getElementById('modalTrailerGlobalTitulo').textContent = titulo;
+        document.getElementById('iframeTrailerGlobal').src = toEmbedUrlGlobal(url);
+        modal.show();
+    }
+
+    document.addEventListener('hidden.bs.modal', function (e) {
+        if (e.target.id === 'modalReproductorGlobal') {
+            document.getElementById('iframeReproductorGlobal').src = '';
+            const video = document.getElementById('videoReproductorGlobal');
+            video.pause();
+            video.src = '';
+        }
+        if (e.target.id === 'modalTrailerGlobal') {
+            document.getElementById('iframeTrailerGlobal').src = '';
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+</html>

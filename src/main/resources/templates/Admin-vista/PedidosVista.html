@@ -1,12 +1,90 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace = "~{Fragments/AdminLayout :: base(~{::contenidoAdmin})}">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{Fragments/AdminLayout :: base(~{::contenidoAdmin})}">
 <body>
-    <main th:fragment="contenidoAdmin" class="p-4 content">
-        <p>hola seccion de pedidos </p>
-    </main>
+<main th:fragment="contenidoAdmin" class="content">
+    <header class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <span class="form-kicker">ADMINISTRACIÓN DEL CATÁLOGO</span>
+            <h1 class="h2 fw-bold mt-2 mb-1">Series</h1>
+            <p class="text-secondary mb-0">Agrega, edita y organiza las series disponibles para los usuarios.</p>
+        </div>
+        <a class="btn btn-pelimatch rounded-3 px-4" th:href="@{/admin/series/nueva}">
+            <i class="bi bi-plus-lg me-2"></i>Agregar serie
+        </a>
+    </header>
+
+    <section class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-0 p-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <h2 class="h5 fw-bold mb-1">Series registradas</h2>
+                    <p class="text-secondary small mb-0">El listado se carga desde la base de datos.</p>
+                </div>
+                <span class="badge rounded-pill text-bg-light px-3 py-2"
+                      th:text="${#lists.size(series) + ' series'}">0 series</span>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th class="ps-4">Serie</th>
+                    <th>Categoría</th>
+                    <th>Año</th>
+                    <th>Temporadas</th>
+                    <th>Estado</th>
+                    <th class="text-end pe-4">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(series)}">
+                    <td colspan="6" class="text-center py-5">
+                        <i class="bi bi-tv display-5 text-secondary"></i>
+                        <h3 class="h5 fw-bold mt-3">Aún no hay series</h3>
+                        <p class="text-secondary">Agrega una serie para que aparezca en la vista de usuarios.</p>
+                        <a class="btn btn-pelimatch rounded-3" th:href="@{/admin/series/nueva}">Agregar primera serie</a>
+                    </td>
+                </tr>
+                <tr th:each="serie : ${series}">
+                    <td class="ps-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <img th:if="${serie.imagen != null and !serie.imagen.isBlank()}" th:src="${serie.imagen}"
+                                 th:alt="${serie.titulo}" class="admin-poster">
+                            <div th:unless="${serie.imagen != null and !serie.imagen.isBlank()}" class="admin-poster admin-poster-placeholder">
+                                <i class="bi bi-tv"></i>
+                            </div>
+                            <div>
+                                <div class="fw-semibold" th:text="${serie.titulo}">Título</div>
+                                <small class="text-secondary text-truncate d-inline-block admin-synopsis"
+                                       th:text="${serie.sinopsis}" th:title="${serie.sinopsis}">Sinopsis</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td th:text="${serie.categoria != null ? serie.categoria.nombre : 'Sin categoría'}">Categoría</td>
+                    <td th:text="${serie.anio}">2025</td>
+                    <td th:text="${serie.temporadas != null ? serie.temporadas : '-'}">1</td>
+                    <td><span class="badge text-bg-light" th:text="${serie.estado}">En emisión</span></td>
+                    <td class="text-end pe-4">
+                        <div class="d-flex justify-content-end gap-2">
+                            <a class="btn btn-sm btn-outline-primary rounded-3"
+                               th:href="@{/admin/series/editar/{id}(id=${serie.idSerie})}" aria-label="Editar serie">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <form th:action="@{/admin/series/eliminar/{id}(id=${serie.idSerie})}" method="post"
+                                  onsubmit="return confirm('¿Eliminar esta serie?');">
+                                <button class="btn btn-sm btn-outline-danger rounded-3" type="submit" aria-label="Eliminar serie">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer bg-white border-0 px-4 py-3 text-secondary small">Panel de administración · PelisMatch</div>
+    </section>
+</main>
 </body>
 </html>

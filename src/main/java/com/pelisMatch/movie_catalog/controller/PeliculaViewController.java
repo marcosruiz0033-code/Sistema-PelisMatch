@@ -6,13 +6,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
+=======
+>>>>>>> master
 
 @Controller
-@RequestMapping("/peliculas")
 public class PeliculaViewController {
 
     private final PeliculaService service;
@@ -21,6 +23,7 @@ public class PeliculaViewController {
         this.service = service;
     }
 
+<<<<<<< HEAD
     @GetMapping
     public String listar(@RequestParam(required = false) String q,
                          @RequestParam(required = false) String genero,
@@ -46,3 +49,23 @@ public class PeliculaViewController {
         return "peliculas/detalle";
     }
 }
+=======
+    @GetMapping("/peliculas")
+    public String listar(Model model) {
+        model.addAttribute("peliculas", service.listar());
+        model.addAttribute("paginaActiva", "peliculas");
+        return "peliculas/lista";
+    }
+
+    @GetMapping("/peliculas/{id}")
+    public String detalle(@PathVariable Long id, Model model) {
+        return service.buscarPorId(id)
+                .map(pelicula -> {
+                    model.addAttribute("pelicula", pelicula);
+                    model.addAttribute("paginaActiva", "peliculas");
+                    return "peliculas/detalle";
+                })
+                .orElse("redirect:/peliculas");
+    }
+}
+>>>>>>> master
