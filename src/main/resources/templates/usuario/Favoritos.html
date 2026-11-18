@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{Fragments/UsuarioLayout :: base(~{::contenidoUsuario})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Favoritos — PeliMatch</title>
+</head>
+<body>
+<div th:fragment="contenidoUsuario">
+
+    <section class="search-results">
+        <div class="search-results-header">
+            <h1 class="seccion-titulo">Mis favoritos</h1>
+            <p class="catalogo-descripcion">Películas y series que marcaste con el corazón.</p>
+        </div>
+
+        <div class="search-empty" th:if="${peliculasFavoritas.isEmpty() and seriesFavoritas.isEmpty()}">
+            <i class="bi bi-heart"></i>
+            <h2>Aún no tienes favoritos</h2>
+            <p>Marca el corazón en la esquina de cualquier tarjeta para guardarla aquí.</p>
+            <a class="btn btn-light mt-2" th:href="@{/peliculas}"><i class="bi bi-film"></i> Explorar películas</a>
+        </div>
+
+        <section class="seccion search-section" th:if="${!peliculasFavoritas.isEmpty()}">
+            <h2 class="seccion-titulo">Películas</h2>
+            <div class="grid-tarjetas">
+                <article class="tarjeta" th:each="p : ${peliculasFavoritas}" style="cursor:pointer"
+                         th:onclick="'window.location.href=\'' + @{/peliculas/{id}(id=${p.id})} + '\''">
+                    <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
+                    <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
+                    <button type="button" class="btn-favorito activo" data-tipo="pelicula" th:data-id="${p.id}"
+                            onclick="event.stopPropagation(); alternarFavorito(this)"
+                            aria-label="Quitar de favoritos" title="Quitar de favoritos">
+                        <i class="bi bi-heart-fill"></i>
+                    </button>
+                    <div class="card-body">
+                        <p class="titulo" th:text="${p.titulo}">Título</p>
+                        <p class="meta">
+                            <span th:text="${p.anio}">2025</span> ·
+                            <span th:text="${p.categoria != null ? p.categoria.nombre : ''}">Categoría</span>
+                        </p>
+                        <div class="d-flex gap-2 mt-2 flex-wrap">
+                            <a class="btn btn-sm btn-light" th:href="@{/peliculas/{id}(id=${p.id})}" onclick="event.stopPropagation();"><i class="bi bi-info-circle"></i> Ver detalles</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="seccion search-section" th:if="${!seriesFavoritas.isEmpty()}">
+            <h2 class="seccion-titulo">Series</h2>
+            <div class="grid-tarjetas">
+                <article class="tarjeta" th:each="s : ${seriesFavoritas}" style="cursor:pointer"
+                         th:onclick="'window.location.href=\'' + @{/series/{id}(id=${s.idSerie})} + '\''">
+                    <img class="poster" th:if="${s.imagen != null and !s.imagen.isEmpty()}" th:src="${s.imagen}" th:alt="${s.titulo}">
+                    <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}"><i class="bi bi-tv"></i></div>
+                    <button type="button" class="btn-favorito activo" data-tipo="serie" th:data-id="${s.idSerie}"
+                            onclick="event.stopPropagation(); alternarFavorito(this)"
+                            aria-label="Quitar de favoritos" title="Quitar de favoritos">
+                        <i class="bi bi-heart-fill"></i>
+                    </button>
+                    <div class="card-body">
+                        <p class="titulo" th:text="${s.titulo}">Título</p>
+                        <p class="meta">
+                            <span th:text="${s.anio}">2025</span> ·
+                            <span th:text="${s.categoria != null ? s.categoria.nombre : ''}">Categoría</span>
+                        </p>
+                        <div class="d-flex gap-2 mt-2">
+                            <a class="btn btn-sm btn-light" th:href="@{/series/{id}(id=${s.idSerie})}" onclick="event.stopPropagation();"><i class="bi bi-info-circle"></i> Ver detalles</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </section>
+
+</div>
+</body>
+</html>

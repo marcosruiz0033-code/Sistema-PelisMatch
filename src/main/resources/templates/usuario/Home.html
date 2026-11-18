@@ -90,6 +90,11 @@
                 <div class="poster-placeholder" th:unless="${s.imagen != null and !s.imagen.isEmpty()}">
                     <i class="bi bi-tv"></i>
                 </div>
+                <button type="button" class="btn-favorito" data-tipo="serie" th:data-id="${s.idSerie}"
+                        onclick="event.stopPropagation(); alternarFavorito(this)"
+                        aria-label="Agregar a favoritos" title="Agregar a favoritos">
+                    <i class="bi bi-heart"></i>
+                </button>
                 <div class="card-body">
                     <p class="titulo" th:text="${s.titulo}">Título</p>
                     <p class="meta">
@@ -113,6 +118,11 @@
                 <article class="tarjeta" th:if="${p != null}">
                     <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
                     <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
+                    <button type="button" class="btn-favorito" data-tipo="pelicula" th:data-id="${p.id}"
+                            onclick="event.stopPropagation(); alternarFavorito(this)"
+                            aria-label="Agregar a favoritos" title="Agregar a favoritos">
+                        <i class="bi bi-heart"></i>
+                    </button>
                     <div class="card-body">
                         <p class="titulo" th:text="${p.titulo}">Título</p>
                         <p class="meta">
@@ -137,6 +147,11 @@
                 <article class="tarjeta" th:if="${p != null}">
                     <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
                     <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
+                    <button type="button" class="btn-favorito" data-tipo="pelicula" th:data-id="${p.id}"
+                            onclick="event.stopPropagation(); alternarFavorito(this)"
+                            aria-label="Agregar a favoritos" title="Agregar a favoritos">
+                        <i class="bi bi-heart"></i>
+                    </button>
                     <div class="card-body">
                         <p class="titulo" th:text="${p.titulo}">Título</p>
                         <p class="meta">
@@ -161,6 +176,11 @@
                 <article class="tarjeta" th:if="${p != null}">
                     <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
                     <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
+                    <button type="button" class="btn-favorito" data-tipo="pelicula" th:data-id="${p.id}"
+                            onclick="event.stopPropagation(); alternarFavorito(this)"
+                            aria-label="Agregar a favoritos" title="Agregar a favoritos">
+                        <i class="bi bi-heart"></i>
+                    </button>
                     <div class="card-body">
                         <p class="titulo" th:text="${p.titulo}">Título</p>
                         <p class="meta">

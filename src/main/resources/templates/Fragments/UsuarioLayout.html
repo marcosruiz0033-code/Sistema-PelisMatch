@@ -25,6 +25,7 @@
             <a class="nav-item-custom" th:classappend="${paginaActiva == 'inicio'} ? 'active' : ''" th:href="@{/}">Inicio</a>
             <a class="nav-item-custom" th:classappend="${paginaActiva == 'peliculas'} ? 'active' : ''" th:href="@{/peliculas}">Películas</a>
             <a class="nav-item-custom" th:classappend="${paginaActiva == 'series'} ? 'active' : ''" th:href="@{/series}">Series</a>
+            <a class="nav-item-custom" th:classappend="${paginaActiva == 'favoritos'} ? 'active' : ''" th:href="@{/favoritos}">Favoritos</a>
         </nav>
 
         <div class="header-right">
@@ -60,6 +61,7 @@
             <a th:href="@{/}">Inicio</a>
             <a th:href="@{/peliculas}">Películas</a>
             <a th:href="@{/series}">Series</a>
+            <a th:href="@{/favoritos}">Favoritos</a>
         </nav>
         <p class="footer-copy">&copy; 2026 PeliMatch — Catálogo de información de películas y series. Proyecto de curso.</p>
     </div>
@@ -168,6 +170,57 @@
             document.getElementById('iframeTrailerGlobal').src = '';
         }
     });
+
+    /* ===== Favoritos ===== */
+
+    function pintarFavorito(btn, activo) {
+        btn.classList.toggle('activo', activo);
+        const icono = btn.querySelector('i');
+        if (icono) icono.className = activo ? 'bi bi-heart-fill' : 'bi bi-heart';
+        const etiqueta = activo ? 'Quitar de favoritos' : 'Agregar a favoritos';
+        btn.setAttribute('aria-label', etiqueta);
+        btn.setAttribute('title', etiqueta);
+    }
+
+    async function cargarFavoritos() {
+        const botones = document.querySelectorAll('.btn-favorito');
+        if (!botones.length) return;
+        try {
+            const respuesta = await fetch('/api/favoritos');
+            if (!respuesta.ok) return;
+            const datos = await respuesta.json();
+            const pelis = new Set((datos.peliculas || []).map(String));
+            const series = new Set((datos.series || []).map(String));
+            botones.forEach(btn => {
+                const activo = btn.dataset.tipo === 'pelicula'
+                    ? pelis.has(btn.dataset.id)
+                    : series.has(btn.dataset.id);
+                pintarFavorito(btn, activo);
+            });
+        } catch (e) {
+            console.error('No se pudieron cargar los favoritos', e);
+        }
+    }
+
+    async function alternarFavorito(btn) {
+        if (btn.disabled) return;
+        btn.disabled = true;
+        try {
+            const respuesta = await fetch('/api/favoritos/alternar?tipo='
+                + encodeURIComponent(btn.dataset.tipo) + '&id=' + encodeURIComponent(btn.dataset.id),
+                { method: 'POST' });
+            if (!respuesta.ok) return;
+            const datos = await respuesta.json();
+            pintarFavorito(btn, datos.favorito === true);
+        } catch (e) {
+            console.error('No se pudo actualizar el favorito', e);
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarFavoritos);
+    if (document.readyState !== 'loading') cargarFavoritos();
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"

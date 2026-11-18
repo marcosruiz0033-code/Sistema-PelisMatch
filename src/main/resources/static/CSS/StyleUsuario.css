@@ -538,12 +538,51 @@ a {
 /* ===== Tarjetas (series / películas) ===== */
 
 .tarjeta {
+    position: relative;
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
     overflow: hidden;
     color: var(--text-primary);
     transition: transform 0.25s ease-in-out;
+}
+
+/* ===== Corazón de favoritos (esquina superior derecha de la card) ===== */
+
+.btn-favorito {
+    position: absolute;
+    top: .55rem;
+    right: .55rem;
+    z-index: 5;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .55);
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: transform .15s ease, background .15s ease, color .15s ease;
+}
+
+.btn-favorito:hover {
+    transform: scale(1.12);
+    background: rgba(0, 0, 0, .75);
+}
+
+.btn-favorito.activo {
+    color: #ff4d6d;
+}
+
+.btn-favorito:disabled {
+    opacity: .6;
+    cursor: wait;
 }
 
 .tarjeta:hover {

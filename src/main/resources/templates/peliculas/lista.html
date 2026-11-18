@@ -89,6 +89,11 @@
                 <article class="tarjeta" th:if="${p != null}" th:attr="data-titulo=${p.titulo},data-sinopsis=${p.sinopsis},data-categoria=${p.categoria != null ? p.categoria.nombre : ''},data-anio=${p.anio},data-director=${p.director},data-trailer=${p.urlTrailer},data-netflix=${p.urlNetflix},data-prime=${p.urlPrimeVideo},data-disney=${p.urlDisneyPlus},data-max=${p.urlMax},data-apple=${p.urlAppleTv}" style="cursor:pointer" onclick="abrirDetallePelicula(this)">
                     <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
                     <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
+                    <button type="button" class="btn-favorito" data-tipo="pelicula" th:data-id="${p.id}"
+                            onclick="event.stopPropagation(); alternarFavorito(this)"
+                            aria-label="Agregar a favoritos" title="Agregar a favoritos">
+                        <i class="bi bi-heart"></i>
+                    </button>
                     <div class="card-body">
                         <p class="titulo" th:text="${p.titulo}">Título</p>
                         <p class="meta">
@@ -159,6 +164,11 @@
                 <article class="tarjeta" th:if="${p != null}" style="cursor:pointer" th:onclick="'window.location.href=\'' + @{/peliculas/{id}(id=${p.id})} + '\''">
                     <img class="poster" th:if="${p.imagen != null and !p.imagen.isEmpty()}" th:src="${p.imagen}" th:alt="${p.titulo}">
                     <div class="poster-placeholder" th:unless="${p.imagen != null and !p.imagen.isEmpty()}"><i class="bi bi-film"></i></div>
+                    <button type="button" class="btn-favorito" data-tipo="pelicula" th:data-id="${p.id}"
+                            onclick="event.stopPropagation(); alternarFavorito(this)"
+                            aria-label="Agregar a favoritos" title="Agregar a favoritos">
+                        <i class="bi bi-heart"></i>
+                    </button>
                     <div class="card-body">
                         <p class="titulo" th:text="${p.titulo}">Título</p>
                         <p class="meta">
