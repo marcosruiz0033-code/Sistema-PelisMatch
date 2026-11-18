@@ -18,4 +18,6 @@ public interface SerieRepository extends JpaRepository<Serie, Integer> {
 
     List<Serie> findByIdSerieNotInOrderByIdSerieDesc(List<Integer> ids, Pageable pageable);
 
+    List<Serie> findByCategoriaNombreIgnoreCase(String nombre);
+
 }
