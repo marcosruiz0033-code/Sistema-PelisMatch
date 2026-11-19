@@ -1,6 +1,7 @@
 package com.pelisMatch.movie_catalog.service;
 
 import com.pelisMatch.movie_catalog.model.Serie;
+import com.pelisMatch.movie_catalog.model.Categoria;
 import com.pelisMatch.movie_catalog.repository.SerieRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -103,6 +105,32 @@ class SerieServiceTest {
                 .thenReturn(List.of(serie(1, "A"), serie(2, "B")));
 
         assertThat(serieService.listarTodas()).hasSize(2);
+    }
+
+    @Test
+    void buscarPagina_filtraCategoriaYDevuelveLaPaginaValida() {
+        Categoria cienciaFiccion = new Categoria();
+        cienciaFiccion.setNombre("Ciencia ficción");
+        Serie serieAntigua = serie(1, "Serie antigua");
+        serieAntigua.setCategoria(cienciaFiccion);
+        serieAntigua.setAnio(2010);
+        Serie serieNueva = serie(2, "Serie nueva");
+        serieNueva.setCategoria(cienciaFiccion);
+        serieNueva.setAnio(2020);
+        Page<Serie> fueraDeRango = new PageImpl<>(
+                List.of(), PageRequest.of(99, 1), 2);
+        Page<Serie> ultimaPagina = new PageImpl<>(
+                List.of(serieAntigua), PageRequest.of(1, 1), 2);
+        when(serieRepository.buscarPagina(eq("Ciencia ficción"), any()))
+                .thenReturn(fueraDeRango, ultimaPagina);
+
+        Page<Serie> resultado = serieService.buscarPagina("Ciencia ficción", "recientes", 99, 1);
+
+        assertThat(resultado.getContent()).extracting(Serie::getTitulo)
+                .containsExactly("Serie antigua");
+        assertThat(resultado.getNumber()).isEqualTo(1);
+        assertThat(resultado.getTotalPages()).isEqualTo(2);
+        verify(serieRepository, times(2)).buscarPagina(eq("Ciencia ficción"), any());
     }
 
 }

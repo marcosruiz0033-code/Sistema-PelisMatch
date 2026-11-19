@@ -38,6 +38,8 @@ public class ControllerAdmin {
         model.addAttribute("totalPeliculas", peliculaService.contar());
         model.addAttribute("totalSeries", serieService.contar());
         model.addAttribute("totalUsuarios", usuarioService.contar());
+        model.addAttribute("ultimasPeliculas", peliculaService.listarRecientes());
+        model.addAttribute("ultimasSeries", serieService.listarRecientes());
         model.addAttribute("nombreAdministrador", session.getAttribute("usuarioNombre"));
         return "Admin-vista/Dashboard";
     }

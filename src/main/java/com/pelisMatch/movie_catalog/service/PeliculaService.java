@@ -6,6 +6,7 @@ import com.pelisMatch.movie_catalog.repository.PeliculaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import org.springframework.http.HttpStatus;
 
@@ -44,6 +45,28 @@ public class PeliculaService {
                     PageRequest.of(page.getTotalPages() - 1, tamanio));
         }
         return page;
+    }
+
+    public Page<Pelicula> buscarPagina(String q, String genero, String orden,
+                                       int pagina, int tamanio) {
+        Sort sort = ordenamiento(orden);
+        String texto = q == null || q.isBlank() ? null : q.trim();
+        String filtroGenero = genero == null || genero.isBlank() ? null : genero.trim();
+        int paginaSolicitada = Math.max(0, pagina);
+        Page<Pelicula> page = repository.buscarPagina(
+                texto, filtroGenero, PageRequest.of(paginaSolicitada, tamanio, sort));
+        if (page.getTotalPages() == 0 && paginaSolicitada > 0) {
+            return repository.buscarPagina(texto, filtroGenero, PageRequest.of(0, tamanio, sort));
+        }
+        if (page.getTotalPages() > 0 && paginaSolicitada >= page.getTotalPages()) {
+            return repository.buscarPagina(texto, filtroGenero,
+                    PageRequest.of(page.getTotalPages() - 1, tamanio, sort));
+        }
+        return page;
+    }
+
+    public List<Pelicula> listarRecientes() {
+        return repository.findTop5ByOrderByIdDesc();
     }
 
     public long contar() {
@@ -107,6 +130,29 @@ public class PeliculaService {
             case "az" -> Comparator.comparing(
                     Pelicula::getTitulo, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Pelicula::getId, Comparator.nullsLast(Comparator.naturalOrder()));
+            default -> throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "El criterio de orden no es válido");
+        };
+    }
+
+    private Sort ordenamiento(String orden) {
+        String criterio = orden == null || orden.isBlank()
+                ? "populares"
+                : orden.trim().toLowerCase(Locale.ROOT);
+        return switch (criterio) {
+            case "populares" -> Sort.by(
+                    Sort.Order.desc("puntuacion").nullsLast(),
+                    Sort.Order.desc("anio").nullsLast(),
+                    Sort.Order.desc("id"));
+            case "recientes" -> Sort.by(
+                    Sort.Order.desc("anio").nullsLast(),
+                    Sort.Order.desc("id"));
+            case "antiguas" -> Sort.by(
+                    Sort.Order.asc("anio").nullsLast(),
+                    Sort.Order.asc("id"));
+            case "az" -> Sort.by(
+                    Sort.Order.asc("titulo").ignoreCase(),
+                    Sort.Order.asc("id"));
             default -> throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "El criterio de orden no es válido");
         };

@@ -23,11 +23,17 @@ public class SerieController {
     }
 
     @GetMapping
-    public String listar(@RequestParam(defaultValue = "0") int pagina, Model model) {
-        Page<Serie> page = serieService.listarPagina(pagina, TAMANIO_PAGINA);
+    public String listar(@RequestParam(defaultValue = "0") int pagina,
+                         @RequestParam(required = false) String genero,
+                         @RequestParam(defaultValue = "populares") String orden,
+                         Model model) {
+        Page<Serie> page = serieService.buscarPagina(genero, orden, pagina, TAMANIO_PAGINA);
         model.addAttribute("series", page.getContent());
         model.addAttribute("paginaActual", page.getNumber());
         model.addAttribute("totalPaginas", page.getTotalPages());
+        model.addAttribute("generos", serieService.generos());
+        model.addAttribute("generoActual", genero == null ? "" : genero);
+        model.addAttribute("ordenActual", orden);
         model.addAttribute("paginaActiva", "series");
         return "usuario/Series";
     }

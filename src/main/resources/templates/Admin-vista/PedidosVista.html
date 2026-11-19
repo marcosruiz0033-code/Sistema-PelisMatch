@@ -61,7 +61,7 @@
                             </div>
                         </div>
                     </td>
-                    <td th:text="${serie.categoria != null ? serie.categoria.nombre : 'Sin categoría'}">Categoría</td>
+                    <td th:text="${serie.categoria != null ? #strings.trim(#strings.substringBefore(serie.categoria.nombre, '(')) : 'Sin categoría'}">Categoría</td>
                     <td th:text="${serie.anio}">2025</td>
                     <td th:text="${serie.temporadas != null ? serie.temporadas : '-'}">1</td>
                     <td><span class="badge text-bg-light" th:text="${serie.estado}">En emisión</span></td>

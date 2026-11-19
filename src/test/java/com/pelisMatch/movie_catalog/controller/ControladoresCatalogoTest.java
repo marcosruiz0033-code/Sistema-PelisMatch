@@ -1,5 +1,7 @@
 package com.pelisMatch.movie_catalog.controller;
 
+import com.pelisMatch.movie_catalog.model.Pelicula;
+import com.pelisMatch.movie_catalog.model.Serie;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +10,9 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -28,6 +33,14 @@ class ControladoresCatalogoTest {
         session.setAttribute("usuarioRol", "USER");
         session.setAttribute("usuarioId", 1);
         session.setAttribute("usuarioNombre", "Frank");
+        return session;
+    }
+
+    private MockHttpSession sesionAdministrador() {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("usuarioRol", "ADMIN");
+        session.setAttribute("usuarioId", 1);
+        session.setAttribute("usuarioNombre", "Administrador");
         return session;
     }
 
@@ -95,6 +108,23 @@ class ControladoresCatalogoTest {
     }
 
     @Test
+    void series_filtraCategoriaYConservaElOrdenSeleccionado() throws Exception {
+        var resultado = mockMvc.perform(get("/series")
+                        .param("genero", "Ciencia ficción")
+                        .param("orden", "az")
+                        .session(sesionUsuario()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("generoActual", "Ciencia ficción"))
+                .andExpect(model().attribute("ordenActual", "az"))
+                .andReturn();
+
+        List<?> series = (List<?>) resultado.getModelAndView().getModel().get("series");
+        assertThat(series).isNotEmpty().allSatisfy(contenido ->
+                assertThat(((Serie) contenido).getCategoria().getNombre())
+                        .isEqualTo("Ciencia ficción"));
+    }
+
+    @Test
     void serieInexistente_redirigeAlListado() throws Exception {
         mockMvc.perform(get("/series/999999").session(sesionUsuario()))
                 .andExpect(status().is3xxRedirection())
@@ -128,6 +158,29 @@ class ControladoresCatalogoTest {
     }
 
     @Test
+    void peliculas_filtraPorTextoYCategoria() throws Exception {
+        var resultado = mockMvc.perform(get("/peliculas")
+                        .param("q", "Matrix")
+                        .param("genero", "Ciencia ficción")
+                        .param("orden", "az")
+                        .session(sesionUsuario()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("q", "Matrix"))
+                .andExpect(model().attribute("generoActual", "Ciencia ficción"))
+                .andExpect(model().attribute("ordenActual", "az"))
+                .andReturn();
+
+        List<?> peliculas = (List<?>) resultado.getModelAndView().getModel().get("peliculas");
+        assertThat(peliculas).isNotEmpty().allSatisfy(contenido -> {
+            Pelicula pelicula = (Pelicula) contenido;
+            String categoria = pelicula.getCategoria() == null
+                    ? pelicula.getGenero()
+                    : pelicula.getCategoria().getNombre();
+            assertThat(categoria).isEqualToIgnoringCase("Ciencia ficción");
+        });
+    }
+
+    @Test
     void peliculaInexistente_redirigeAlListado() throws Exception {
         mockMvc.perform(get("/peliculas/999999").session(sesionUsuario()))
                 .andExpect(status().is3xxRedirection())
@@ -142,6 +195,27 @@ class ControladoresCatalogoTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("usuario/Search"))
                 .andExpect(model().attributeExists("peliculas", "series", "consulta"));
+    }
+
+    @Test
+    void dashboardAdmin_muestraActividadReciente() throws Exception {
+        mockMvc.perform(get("/admin/dashboard").session(sesionAdministrador()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("Admin-vista/Dashboard"))
+                .andExpect(model().attributeExists(
+                        "ultimasPeliculas", "ultimasSeries", "totalPeliculas"));
+    }
+
+    @Test
+    void formularioPelicula_muestraLasCategoriasLegibles() throws Exception {
+        String html = mockMvc.perform(get("/admin/peliculas/nueva")
+                        .session(sesionAdministrador()))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(html).contains(">Acción</option>", ">Ciencia ficción</option>", ">Animación</option>");
     }
 
 }

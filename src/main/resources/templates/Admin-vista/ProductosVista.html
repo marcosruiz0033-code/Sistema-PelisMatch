@@ -131,7 +131,7 @@
 
                         <td>
                         <span class="badge rounded-pill text-bg-primary"
-                              th:text="${p.categoria != null ? p.categoria.nombre : ''}">
+                              th:text="${p.categoria != null ? #strings.trim(#strings.substringBefore(p.categoria.nombre, '(')) : ''}">
                             Categoría
                         </span>
                         </td>

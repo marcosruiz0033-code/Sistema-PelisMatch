@@ -123,29 +123,25 @@
                 <p class="catalogo-descripcion">Filtra por categoría, año o popularidad.</p>
             </div>
 
-            <form class="catalogo-filtros" action="#" method="get">
+            <form class="catalogo-filtros" th:action="@{/series}" method="get">
                 <div class="filtro-campo">
                     <label for="filtroGenero">Género</label>
                     <select id="filtroGenero" name="genero">
-                        <option value="">Todos</option>
-                        <option value="Accion">Acción</option>
-                        <option value="Comedia">Comedia</option>
-                        <option value="Drama">Drama</option>
-                        <option value="Terror">Terror</option>
-                        <option value="Ciencia-ficcion">Ciencia ficción</option>
-                        <option value="Animacion">Animación</option>
-                        <option value="Suspenso">Suspenso</option>
-                        <option value="Aventura">Aventura</option>
+                        <option value="" th:selected="${generoActual.isBlank()}">Todas</option>
+                        <option th:each="generoDisponible : ${generos}"
+                                th:value="${generoDisponible}"
+                                th:text="${#strings.trim(#strings.substringBefore(generoDisponible, '('))}"
+                                th:selected="${generoActual == generoDisponible}">Categoría</option>
                     </select>
                 </div>
 
                 <div class="filtro-campo">
                     <label for="filtroOrden">Ordenar por</label>
                     <select id="filtroOrden" name="orden">
-                        <option value="populares">Más populares</option>
-                        <option value="recientes">Más recientes</option>
-                        <option value="antiguas">Más antiguas</option>
-                        <option value="az">A - Z</option>
+                        <option value="populares" th:selected="${ordenActual == 'populares'}">Más populares</option>
+                        <option value="recientes" th:selected="${ordenActual == 'recientes'}">Más recientes</option>
+                        <option value="antiguas" th:selected="${ordenActual == 'antiguas'}">Más antiguas</option>
+                        <option value="az" th:selected="${ordenActual == 'az'}">A - Z</option>
                     </select>
                 </div>
 
@@ -199,21 +195,24 @@
                 <i class="bi bi-chevron-left"></i>
             </button>
             <a class="pagina-btn" th:unless="${paginaActual == 0}"
-               th:href="@{/series(pagina=${paginaActual - 1})}" aria-label="Página anterior">
+               th:href="@{/series(pagina=${paginaActual - 1}, genero=${generoActual}, orden=${ordenActual})}"
+               aria-label="Página anterior">
                 <i class="bi bi-chevron-left"></i>
             </a>
 
             <a class="pagina-btn" th:each="p : ${#numbers.sequence(1, totalPaginas)}"
                th:classappend="${p - 1 == paginaActual} ? 'active'"
                th:attr="aria-current=${p - 1 == paginaActual ? 'page' : null}"
-               th:href="@{/series(pagina=${p - 1})}" th:text="${p}">1</a>
+               th:href="@{/series(pagina=${p - 1}, genero=${generoActual}, orden=${ordenActual})}"
+               th:text="${p}">1</a>
 
             <button class="pagina-btn" type="button" aria-label="Página siguiente" disabled
                     th:if="${paginaActual == totalPaginas - 1}">
                 <i class="bi bi-chevron-right"></i>
             </button>
             <a class="pagina-btn" th:unless="${paginaActual == totalPaginas - 1}"
-               th:href="@{/series(pagina=${paginaActual + 1})}" aria-label="Página siguiente">
+               th:href="@{/series(pagina=${paginaActual + 1}, genero=${generoActual}, orden=${ordenActual})}"
+               aria-label="Página siguiente">
                 <i class="bi bi-chevron-right"></i>
             </a>
         </nav>

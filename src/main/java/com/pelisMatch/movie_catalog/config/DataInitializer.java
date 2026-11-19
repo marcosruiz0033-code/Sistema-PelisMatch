@@ -11,6 +11,9 @@ import com.pelisMatch.movie_catalog.model.Usuario;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 import java.util.Locale;
@@ -23,21 +26,29 @@ import static java.util.Map.entry;
 @Configuration
 public class DataInitializer {
 
+    private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
+
     @Bean
     CommandLineRunner cargarDatos(CategoriaRepository categoriaRepository,
                                   SerieRepository serieRepository,
                                   PeliculaRepository peliculaRepository,
                                   UsuarioRepository usuarioRepository,
-                                  PasswordEncoder passwordEncoder) {
+                                  PasswordEncoder passwordEncoder,
+                                  @Value("${app.admin.email}") String correoAdministrador,
+                                  @Value("${app.admin.password}") String passwordAdministrador) {
         return args -> {
             Map<String, Categoria> categorias = cargarCategorias(categoriaRepository);
             cargarSeries(serieRepository, categorias);
             cargarPeliculas(peliculaRepository, categorias);
-            usuarioRepository.findByCorreoIgnoreCase("marcos@utp.edu.pe").orElseGet(() -> {
+            if (correoAdministrador.isBlank() || passwordAdministrador.isBlank()) {
+                logger.info("No se creó el administrador inicial; configure ADMIN_EMAIL y ADMIN_PASSWORD para habilitarlo.");
+                return;
+            }
+            usuarioRepository.findByCorreoIgnoreCase(correoAdministrador).orElseGet(() -> {
                 Usuario administrador = new Usuario();
-                administrador.setNombre("Marcos");
-                administrador.setCorreo("marcos@utp.edu.pe");
-                administrador.setPassword(passwordEncoder.encode("1475369"));
+                administrador.setNombre("Administrador");
+                administrador.setCorreo(correoAdministrador);
+                administrador.setPassword(passwordEncoder.encode(passwordAdministrador));
                 administrador.setRol("ADMIN");
                 return usuarioRepository.save(administrador);
             });
@@ -46,14 +57,14 @@ public class DataInitializer {
 
     private Map<String, Categoria> cargarCategorias(CategoriaRepository repository) {
         return Map.ofEntries(
-                entry("Acci├│n", obtenerCategoria(repository, "Acci├│n", "Peleas, persecuciones y escenas de alto impacto")),
-                entry("Comedia", obtenerCategoria(repository, "Comedia", "Historias para re├¡r y pasarla bien")),
+                entry("Acción", obtenerCategoria(repository, "Acción", "Peleas, persecuciones y escenas de alto impacto")),
+                entry("Comedia", obtenerCategoria(repository, "Comedia", "Historias para reír y pasarla bien")),
                 entry("Drama", obtenerCategoria(repository, "Drama", "Historias intensas y emocionales")),
                 entry("Terror", obtenerCategoria(repository, "Terror", "Historias de miedo y suspense oscuro")),
-                entry("Ciencia ficci├│n", obtenerCategoria(repository, "Ciencia ficci├│n", "Futuro, tecnolog├¡a y mundos imaginarios")),
-                entry("Animaci├│n", obtenerCategoria(repository, "Animaci├│n", "Animaci├│n para todos los p├║blicos")),
+                entry("Ciencia ficción", obtenerCategoria(repository, "Ciencia ficción", "Futuro, tecnología y mundos imaginarios")),
+                entry("Animación", obtenerCategoria(repository, "Animación", "Animación para todos los públicos")),
                 entry("Suspenso", obtenerCategoria(repository, "Suspenso", "Giros argumentales y misterios")),
-                entry("Aventura", obtenerCategoria(repository, "Aventura", "Viajes, descubrimientos y acci├│n"))
+                entry("Aventura", obtenerCategoria(repository, "Aventura", "Viajes, descubrimientos y acción"))
         );
     }
 
@@ -156,22 +167,22 @@ public class DataInitializer {
 
     private List<SerieSeed> series() {
         return List.of(
-                new SerieSeed("Stranger Things", "Un grupo de ni├▒os descubre secretos sobrenaturales en Hawkins.", 2016, "https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg", "Finalizada", 5, "Ciencia ficci├│n", "https://www.youtube.com/watch?v=b9EkMc79ZSU", "https://www.netflix.com/title/80057281", null, null, null, null),
+                new SerieSeed("Stranger Things", "Un grupo de ni├▒os descubre secretos sobrenaturales en Hawkins.", 2016, "https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg", "Finalizada", 5, "Ciencia ficción", "https://www.youtube.com/watch?v=b9EkMc79ZSU", "https://www.netflix.com/title/80057281", null, null, null, null),
                 new SerieSeed("Breaking Bad", "Un profesor de qu├¡mica se convierte en fabricante de metanfetamina.", 2008, "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg", "Finalizada", 5, "Drama", "https://www.youtube.com/watch?v=HhesaQXLuRY", "https://www.netflix.com/title/70143836", null, null, null, null),
                 new SerieSeed("The Last of Us", "Un contrabandista escolta a una ni├▒a inmune en un mundo postapocal├¡ptico.", 2023, "https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg", "En emisi├│n", 2, "Suspenso", "https://www.youtube.com/watch?v=uLtkt8BonwM", null, null, null, "https://www.hbo.com/the-last-of-us", null),
-                new SerieSeed("Dark", "Un misterio temporal une varias generaciones en un peque├▒o pueblo alem├ín.", 2017, "https://image.tmdb.org/t/p/w500/apbrbWs8M9lyOpJYU5WXrpFbk1Z.jpg", "Finalizada", 3, "Ciencia ficci├│n", "https://www.youtube.com/watch?v=rrwycJ08PSA", "https://www.netflix.com/title/80100172", null, null, null, null),
+                new SerieSeed("Dark", "Un misterio temporal une varias generaciones en un peque├▒o pueblo alem├ín.", 2017, "https://image.tmdb.org/t/p/w500/apbrbWs8M9lyOpJYU5WXrpFbk1Z.jpg", "Finalizada", 3, "Ciencia ficción", "https://www.youtube.com/watch?v=rrwycJ08PSA", "https://www.netflix.com/title/80100172", null, null, null, null),
                 new SerieSeed("The Witcher", "Geralt de Rivia, un cazador de monstruos, busca su destino.", 2019, "https://image.tmdb.org/t/p/w500/7vjaCdMw15FEbXyLQTVa04URsPm.jpg", "En emisi├│n", 4, "Aventura", "https://www.youtube.com/watch?v=ndl1W4ltcmg", "https://www.netflix.com/title/80189685", null, null, null, null),
                 new SerieSeed("Wednesday", "Wednesday Addams investiga asesinatos en Nevermore Academy.", 2022, "https://image.tmdb.org/t/p/w500/jeGtaMwGxPmQN5xM4ClnwPQcNQz.jpg", "En emisi├│n", 2, "Comedia", "https://www.youtube.com/watch?v=Di310WS8zLk", "https://www.netflix.com/title/81231974", null, null, null, null),
                 new SerieSeed("The Crown", "La vida de la Reina Isabel II y la monarqu├¡a brit├ínica.", 2016, "https://image.tmdb.org/t/p/w500/1M876KPjulVwppEpldhdc8V4o68.jpg", "Finalizada", 6, "Drama", "https://www.youtube.com/watch?v=JWtnJjn6ng0", "https://www.netflix.com/title/80025678", null, null, null, null),
-                new SerieSeed("Peaky Blinders", "La familia Shelby controla el crimen organizado en Birmingham.", 2013, "https://image.tmdb.org/t/p/w500/vUUqzWa2LnHIVqkaKVlVGkVcZIW.jpg", "Finalizada", 6, "Acci├│n", "https://www.youtube.com/watch?v=oVzVdvGIC7U", "https://www.netflix.com/title/80002479", null, null, null, null),
+                new SerieSeed("Peaky Blinders", "La familia Shelby controla el crimen organizado en Birmingham.", 2013, "https://image.tmdb.org/t/p/w500/vUUqzWa2LnHIVqkaKVlVGkVcZIW.jpg", "Finalizada", 6, "Acción", "https://www.youtube.com/watch?v=oVzVdvGIC7U", "https://www.netflix.com/title/80002479", null, null, null, null),
                 new SerieSeed("Game of Thrones", "Lucha por el Trono de Hierro en los Siete Reinos.", 2011, "https://image.tmdb.org/t/p/w500/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg", "Finalizada", 8, "Aventura", "https://www.youtube.com/watch?v=KPLWWIOCOOQ", null, null, null, "https://www.hbo.com/game-of-thrones", null),
                 new SerieSeed("Squid Game", "Juegos mortales con un premio millonario.", 2021, "https://image.tmdb.org/t/p/w500/dDlEmu3EZ0Pgg93K2SVNLCjCSvE.jpg", "Finalizada", 3, "Suspenso", "https://www.youtube.com/watch?v=oqxAJKy0ii4", "https://www.netflix.com/title/81040344", null, null, null, null),
-                new SerieSeed("The Boys", "Superh├®roes corruptos son enfrentados por un grupo de vigilantes.", 2019, "https://image.tmdb.org/t/p/w500/stTEycfG9928HYGEISBFaG1ngjM.jpg", "Finalizada", 5, "Acci├│n", "https://www.youtube.com/watch?v=06rueu_fh30", null, "https://www.amazon.com/dp/B07QQQ52B3", null, null, null),
+                new SerieSeed("The Boys", "Superh├®roes corruptos son enfrentados por un grupo de vigilantes.", 2019, "https://image.tmdb.org/t/p/w500/stTEycfG9928HYGEISBFaG1ngjM.jpg", "Finalizada", 5, "Acción", "https://www.youtube.com/watch?v=06rueu_fh30", null, "https://www.amazon.com/dp/B07QQQ52B3", null, null, null),
                 new SerieSeed("The Mandalorian", "Un cazarrecompensas protege a Grogu en la galaxia.", 2019, "https://image.tmdb.org/t/p/w500/sWgBv7LV2PRoQgkxwlibdGXKz1S.jpg", "En emisi├│n", 3, "Aventura", "https://www.youtube.com/watch?v=aOC8E8z_ifw", null, null, "https://www.disneyplus.com/series/the-mandalorian/3jLIGMDYINqD/", null, null),
-                new SerieSeed("Severance", "Separaci├│n entre recuerdos laborales y personales.", 2022, "https://image.tmdb.org/t/p/w500/lFf6LLrQjYldcZItzOkGmMMigP7.jpg", "En emisi├│n", 2, "Ciencia ficci├│n", "https://www.youtube.com/watch?v=xEQP4VVuyrY", null, null, null, null, "https://tv.apple.com/show/severance/umc.cmc.1srk2goyh2q2zdxcx605w8vtx"),
+                new SerieSeed("Severance", "Separaci├│n entre recuerdos laborales y personales.", 2022, "https://image.tmdb.org/t/p/w500/lFf6LLrQjYldcZItzOkGmMMigP7.jpg", "En emisi├│n", 2, "Ciencia ficción", "https://www.youtube.com/watch?v=xEQP4VVuyrY", null, null, null, null, "https://tv.apple.com/show/severance/umc.cmc.1srk2goyh2q2zdxcx605w8vtx"),
                 new SerieSeed("Ted Lasso", "Un entrenador de f├║tbol americano dirige un equipo ingl├®s.", 2020, "https://image.tmdb.org/t/p/w500/5fhZdwP1DVJ0FyVH6vrFdHwpXIn.jpg", "En emisi├│n", 3, "Comedia", "https://www.youtube.com/watch?v=3u7EIiohs6U", null, null, null, null, "https://tv.apple.com/show/ted-lasso/umc.cmc.vtoh0mn0xn7t3c643xqonfzy"),
                 new SerieSeed("House of the Dragon", "Guerra civil en la casa Targaryen.", 2022, "https://image.tmdb.org/t/p/w500/z2yahl2uefxDCl0nogcRBstwruJ.jpg", "En emisi├│n", 2, "Aventura", "https://www.youtube.com/watch?v=DotnJ7tTA34", null, null, null, "https://www.hbomax.com/show/c68e69d7-9317-428a-a615-cdf8fe5a2e06/", null),
-                new SerieSeed("La Casa de Papel", "El mayor atraco a la F├íbrica Nacional de Moneda y Timbre.", 2017, "https://image.tmdb.org/t/p/w500/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg", "Finalizada", 5, "Acci├│n", "https://www.youtube.com/watch?v=htqXL94Rza4", "https://www.netflix.com/title/80192098", null, null, null, null),
+                new SerieSeed("La Casa de Papel", "El mayor atraco a la F├íbrica Nacional de Moneda y Timbre.", 2017, "https://image.tmdb.org/t/p/w500/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg", "Finalizada", 5, "Acción", "https://www.youtube.com/watch?v=htqXL94Rza4", "https://www.netflix.com/title/80192098", null, null, null, null),
                 new SerieSeed("Better Call Saul", "La transformaci├│n de Jimmy McGill en Saul Goodman.", 2015, "https://image.tmdb.org/t/p/w500/fC2HDm5t0kHl7mTm7jxMR31b7by.jpg", "Finalizada", 6, "Drama", "https://www.youtube.com/watch?v=lK_70f7PamE", "https://www.netflix.com/title/80021955", null, null, null, null),
                 new SerieSeed("Chernobyl", "La tragedia nuclear de Chernobyl en 1986.", 2019, "https://image.tmdb.org/t/p/w500/hlLXt2tOPT6RRnjiUmoxyG1LTFi.jpg", "Finalizada", 1, "Drama", "https://www.youtube.com/watch?v=s9APLXM9Ei8", null, null, null, "https://www.hbomax.com/", null),
                 new SerieSeed("Succession", "La lucha por el control de Waystar RoyCo.", 2018, "https://image.tmdb.org/t/p/w500/7HW47XbkNQ5fiwQFYGWdw9gs144.jpg", "Finalizada", 4, "Drama", "https://www.youtube.com/watch?v=OzYxJV_rmE8", null, null, null, "https://www.hbomax.com/", null),
@@ -180,12 +191,12 @@ public class DataInitializer {
                 new SerieSeed("Ozark", "Una familia lava dinero para un cartel.", 2017, "https://image.tmdb.org/t/p/w500/m73bD8VjibSKuTWg597GQVyVhSb.jpg", "Finalizada", 4, "Drama", "https://www.youtube.com/watch?v=5hAXVqrljbs", "https://www.netflix.com/title/80117552", null, null, null, null),
                 new SerieSeed("Narcos", "La historia del cartel de Medell├¡n.", 2015, "https://image.tmdb.org/t/p/w500/rTmal9fDbwh5F0waol2hq35U4ah.jpg", "Finalizada", 3, "Drama", "https://www.youtube.com/watch?v=xl8zdCY-abw", "https://www.netflix.com/title/80025172", null, null, null, null),
                 new SerieSeed("Vikings", "Las aventuras de Ragnar Lothbrok.", 2013, "https://image.tmdb.org/t/p/w500/bQLrHIRNEkE3PdIWQrZHynQZazu.jpg", "Finalizada", 6, "Aventura", "https://www.youtube.com/watch?v=9GgxinPwAGc", "https://www.netflix.com/title/70301870", null, null, null, null),
-                new SerieSeed("The Expanse", "Pol├¡tica y misterio en el sistema solar.", 2015, "https://image.tmdb.org/t/p/w500/wQgNepp290ziBUUbC0DVYTdA55.jpg", "Finalizada", 6, "Ciencia ficci├│n", "https://www.youtube.com/watch?v=8X5gXIQmY-E", null, null, null, null, null),
+                new SerieSeed("The Expanse", "Pol├¡tica y misterio en el sistema solar.", 2015, "https://image.tmdb.org/t/p/w500/wQgNepp290ziBUUbC0DVYTdA55.jpg", "Finalizada", 6, "Ciencia ficción", "https://www.youtube.com/watch?v=8X5gXIQmY-E", null, null, null, null, null),
                 new SerieSeed("Mr. Robot", "Un hacker lucha contra una corporaci├│n global.", 2015, "https://image.tmdb.org/t/p/w500/oKIBhzZzDX07SoE2bOLhq2EE8w3.jpg", "Finalizada", 4, "Drama", "https://www.youtube.com/watch?v=xIBiJ_SzJTA", null, "https://www.amazon.com/", null, null, null),
-                new SerieSeed("Daredevil", "Un abogado ciego lucha contra el crimen en Hell's Kitchen.", 2015, "https://image.tmdb.org/t/p/w500/QWbPaDxiB6LW2LjASknzYBvjMj.jpg", "Finalizada", 3, "Acci├│n", "https://www.youtube.com/watch?v=jAy6NJ_D5vU", "https://www.netflix.com/title/80018294", null, null, null, null),
+                new SerieSeed("Daredevil", "Un abogado ciego lucha contra el crimen en Hell's Kitchen.", 2015, "https://image.tmdb.org/t/p/w500/QWbPaDxiB6LW2LjASknzYBvjMj.jpg", "Finalizada", 3, "Acción", "https://www.youtube.com/watch?v=jAy6NJ_D5vU", "https://www.netflix.com/title/80018294", null, null, null, null),
                 new SerieSeed("Loki", "El Dios del Enga├▒o viaja por el multiverso.", 2021, "https://image.tmdb.org/t/p/w500/voHUmluYmKyleFkTu3lOXQG702u.jpg", "En emisi├│n", 2, "Aventura", "https://www.youtube.com/watch?v=nW948Va-l10", null, null, "https://www.disneyplus.com/series/loki/6pARMvILBGzF", null, null),
-                new SerieSeed("Arcane", "La lucha entre Piltover y Zaun.", 2021, "https://image.tmdb.org/t/p/w500/fqldf2t8ztc9aiwn3k6mlX3tvRT.jpg", "Finalizada", 2, "Animaci├│n", "https://www.youtube.com/watch?v=fXmAurh012s", "https://www.netflix.com/title/81435684", null, null, null, null),
-                new SerieSeed("Attack on Titan", "La humanidad lucha contra gigantes devoradores.", 2013, "https://image.tmdb.org/t/p/w500/hTP1DtLGFamjfu8WqjnuQdP1n4i.jpg", "Finalizada", 4, "Animaci├│n", "https://www.youtube.com/watch?v=MGRm4IzK1SQ", "https://www.netflix.com/title/80006144", null, null, null, null)
+                new SerieSeed("Arcane", "La lucha entre Piltover y Zaun.", 2021, "https://image.tmdb.org/t/p/w500/fqldf2t8ztc9aiwn3k6mlX3tvRT.jpg", "Finalizada", 2, "Animación", "https://www.youtube.com/watch?v=fXmAurh012s", "https://www.netflix.com/title/81435684", null, null, null, null),
+                new SerieSeed("Attack on Titan", "La humanidad lucha contra gigantes devoradores.", 2013, "https://image.tmdb.org/t/p/w500/hTP1DtLGFamjfu8WqjnuQdP1n4i.jpg", "Finalizada", 4, "Animación", "https://www.youtube.com/watch?v=MGRm4IzK1SQ", "https://www.netflix.com/title/80006144", null, null, null, null)
         );
     }
 

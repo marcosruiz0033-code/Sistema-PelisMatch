@@ -89,6 +89,7 @@ public class DataLoader implements CommandLineRunner {
         p.setPuntuacion(puntuacion);
         p.setReparto(reparto);
         p.setDescripcion(descripcion);
+        p.setSinopsis(descripcion);
 
         return p;
     }

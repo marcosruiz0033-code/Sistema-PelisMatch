@@ -27,6 +27,7 @@ body {
     color: var(--texto);
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
 }
 
 /* =========================
@@ -100,7 +101,7 @@ body {
 aside,
 .sidebar {
     width: 260px;
-    min-height: calc(100vh - 70px);
+    min-height: 100vh;
     background: var(--sidebar) !important;
     border-right: none !important;
     padding: 25px 15px !important;
@@ -315,6 +316,11 @@ aside .text-danger:hover,
 .form-select {
     border: 1px solid var(--borde);
     border-radius: 8px;
+    color: var(--texto);
+    background-color: var(--blanco);
+}
+
+.form-select option {
     color: var(--texto);
     background-color: var(--blanco);
 }

@@ -178,6 +178,11 @@ a {
     margin-top: var(--section-gap);
 }
 
+.search-section .grid-tarjetas {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 200px));
+    justify-content: start;
+}
+
 .search-empty {
     padding: 4rem 1rem;
     text-align: center;

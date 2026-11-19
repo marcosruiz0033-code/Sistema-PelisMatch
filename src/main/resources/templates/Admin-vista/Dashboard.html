@@ -61,6 +61,50 @@
             </div>
         </div>
     </section>
+
+    <section class="row g-3 mt-2" aria-label="Actividad reciente">
+        <div class="col-lg-6">
+            <article class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Películas añadidas recientemente</span>
+                    <a class="small text-decoration-none" th:href="@{/admin/peliculas}">Ver catálogo</a>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center gap-3"
+                       th:each="pelicula : ${ultimasPeliculas}"
+                       th:href="@{/admin/peliculas/editar/{id}(id=${pelicula.id})}">
+                        <span class="text-truncate" th:text="${pelicula.titulo}">Título de película</span>
+                        <span class="badge text-bg-light"
+                              th:text="${pelicula.categoria != null ? #strings.trim(#strings.substringBefore(pelicula.categoria.nombre, '(')) : 'Sin categoría'}">
+                            Categoría
+                        </span>
+                    </a>
+                    <div class="list-group-item text-secondary" th:if="${ultimasPeliculas.isEmpty()}">
+                        Aún no hay películas registradas.
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="col-lg-6">
+            <article class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Series añadidas recientemente</span>
+                    <a class="small text-decoration-none" th:href="@{/admin/series}">Ver catálogo</a>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center gap-3"
+                       th:each="serie : ${ultimasSeries}"
+                       th:href="@{/admin/series/editar/{id}(id=${serie.idSerie})}">
+                        <span class="text-truncate" th:text="${serie.titulo}">Título de serie</span>
+                        <span class="badge text-bg-light" th:text="${serie.estado}">Estado</span>
+                    </a>
+                    <div class="list-group-item text-secondary" th:if="${ultimasSeries.isEmpty()}">
+                        Aún no hay series registradas.
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
 </main>
 </body>
 </html>
