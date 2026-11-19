@@ -7,9 +7,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+<<<<<<< HEAD
+import org.springframework.web.bind.annotation.RequestParam;
+=======
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Optional;
+>>>>>>> origin/modulo-peliculas
+
 @Controller
+@RequestMapping("/peliculas")
 public class PeliculaViewController {
 
     private static final int TAMANIO_PAGINA = 14;
@@ -20,6 +28,7 @@ public class PeliculaViewController {
         this.service = service;
     }
 
+<<<<<<< HEAD
     @GetMapping("/peliculas")
     public String listar(@RequestParam(defaultValue = "0") int pagina, Model model) {
         Page<Pelicula> page = service.listarPagina(pagina, TAMANIO_PAGINA);
@@ -27,17 +36,32 @@ public class PeliculaViewController {
         model.addAttribute("paginaActual", page.getNumber());
         model.addAttribute("totalPaginas", page.getTotalPages());
         model.addAttribute("paginaActiva", "peliculas");
+=======
+    @GetMapping
+    public String listar(@RequestParam(required = false) String q,
+                         @RequestParam(required = false) String genero,
+                         @RequestParam(defaultValue = "populares") String orden,
+                         Model model) {
+        model.addAttribute("peliculas", service.buscar(q, genero, orden));
+        model.addAttribute("masValoradas", service.masValoradas(5));
+        model.addAttribute("generos", service.generos());
+        model.addAttribute("q", q);
+        model.addAttribute("generoActual", genero == null ? "" : genero);
+        model.addAttribute("ordenActual", orden);
+>>>>>>> origin/modulo-peliculas
         return "peliculas/lista";
     }
 
-    @GetMapping("/peliculas/{id}")
+    @GetMapping("/{id}")
     public String detalle(@PathVariable Long id, Model model) {
-        return service.buscarPorId(id)
-                .map(pelicula -> {
-                    model.addAttribute("pelicula", pelicula);
-                    model.addAttribute("paginaActiva", "peliculas");
-                    return "peliculas/detalle";
-                })
-                .orElse("redirect:/peliculas");
+        Optional<Pelicula> encontrada = service.buscarPorId(id);
+        if (encontrada.isEmpty()) {
+            return "redirect:/peliculas";
+        }
+        Pelicula pelicula = encontrada.get();
+        model.addAttribute("pelicula", pelicula);
+        model.addAttribute("relacionadas", service.relacionadas(pelicula, 4));
+        model.addAttribute("generos", service.generos());
+        return "peliculas/detalle";
     }
 }

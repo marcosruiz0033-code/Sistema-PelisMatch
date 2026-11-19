@@ -2,6 +2,7 @@ package com.pelisMatch.movie_catalog.controller;
 
 import com.pelisMatch.movie_catalog.model.Pelicula;
 import com.pelisMatch.movie_catalog.service.PeliculaService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -29,12 +30,12 @@ public class PeliculaController {
     }
 
     @PostMapping
-    public Pelicula crear(@RequestBody Pelicula pelicula) {
+    public Pelicula crear(@Valid @RequestBody Pelicula pelicula) {
         return service.guardar(pelicula);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pelicula> actualizar(@PathVariable Long id, @RequestBody Pelicula pelicula) {
+    public ResponseEntity<Pelicula> actualizar(@PathVariable Long id, @Valid @RequestBody Pelicula pelicula) {
         if (service.buscarPorId(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
