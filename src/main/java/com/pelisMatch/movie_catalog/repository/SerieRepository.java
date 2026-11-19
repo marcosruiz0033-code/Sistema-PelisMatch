@@ -19,10 +19,8 @@ public interface SerieRepository extends JpaRepository<Serie, Integer> {
 
     List<Serie> findByIdSerieNotInOrderByIdSerieDesc(List<Integer> ids, Pageable pageable);
 
-<<<<<<< HEAD
     Page<Serie> findPageByOrderByIdSerieDesc(Pageable pageable);
-=======
+
     List<Serie> findByCategoriaNombreIgnoreCase(String nombre);
->>>>>>> origin/modulo-peliculas
 
 }

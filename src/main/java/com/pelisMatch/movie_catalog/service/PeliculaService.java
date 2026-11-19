@@ -2,13 +2,13 @@ package com.pelisMatch.movie_catalog.service;
 
 import com.pelisMatch.movie_catalog.model.Pelicula;
 import com.pelisMatch.movie_catalog.repository.PeliculaRepository;
-<<<<<<< HEAD
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-=======
+
 import org.springframework.http.HttpStatus;
->>>>>>> origin/modulo-peliculas
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
